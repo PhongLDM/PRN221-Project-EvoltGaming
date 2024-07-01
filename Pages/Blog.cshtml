@@ -1,0 +1,165 @@
+﻿@page
+@model EvoltingStore.Pages.BlogModel
+@using EvoltingStore.Entity
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Blog";
+}
+
+@{
+    var news = (List<News>)ViewData["news"];
+
+    var user = HttpContext.Session.GetString("user");
+    var userData = ViewData["userDetail"];
+    if (user != null)
+    {
+        userData = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(user);
+    }
+}
+
+<!-- Page Preloder -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<!-- Header Section Begin -->
+<header class="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="header__logo">
+                    <a href="/Index">
+                        <img src="img/logo.png" alt="">
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="header__nav">
+                    <nav class="header__menu mobile-menu">
+                        <ul>
+                            <li><a href="/Index">Homepage</a></li>
+                            <li><a href="/Categories">Browse</a></li>
+                            <li class="active"><a href="/Blog">Our Blog</a></li>
+                            <li><a href="#">Contacts</a></li>
+                            @if (userData != null)
+                            {
+                                    <li><a href="#">My Favourite</a></li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="header__right">
+                        <a href="#" class="search-switch"><span class="icon_search"></span></a>
+                    @if (user != null)
+                    {
+                                    <a href="/Profile"><span class="icon_profile"></span></a>
+                    }
+                    else
+                    {
+                                    <a href="/Login">Login Now</a>
+                    }
+                    </div>
+            </div>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+    </div>
+</header>
+<!-- Header End -->
+
+<!-- Product Section Begin -->
+<section class="product-page spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="product__page__content">
+                    <div class="row">
+                        @foreach (var n in news)
+                        {
+                            <div class="col-lg-6 col-md-12">
+                                <div class="product__item">
+                                        <div class="product__item__pic set-bg" data-setbg="@n.Image">
+                                        <div class="ep">@n.Date</div>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h5><a href="@n.Link">@n.Title</a></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="product__sidebar">
+                    <div class="product__sidebar__view">
+                        <div class="section-title">
+                            <h5>Search for News</h5>
+                        </div>
+                        <div class="filter__gallery">
+                            <div class="filter-container">
+                                <form method="post">
+                                    <div class="form-group m-2">
+                                        <label for="searchName"><h3 style="color: papayawhip">Search</h3></label>
+                                        <div>
+                                            <input type="text" name="query" placeholder="Game Name"/>
+                                        </div>
+                                    </div>
+                                    <input class="btn btn-primary m-2" type="submit" value="Filter" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Product Section End -->
+
+<!-- Footer Section Begin -->
+<footer class="footer">
+    <div class="page-up">
+        <a href="#" id="scrollToTopButton"><span class="arrow_carrot-up"></span></a>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="footer__logo">
+                    <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="footer__nav">
+                    <ul>
+                        <li><a href="/Index">Homepage</a></li>
+                        <li><a href="/Categories">Browse</a></li>
+                        <li><a href="#">Our Blog</a></li>
+                        <li><a href="#">Contacts</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+
+    <!-- Search model Begin -->
+    <div class="search-model">
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <div class="search-close-switch"><i class="icon_close"></i></div>
+        <form class="search-model-form">
+            <input type="text" id="search-input" placeholder="Search here.....">
+        </form>
+    </div>
+</div>
+<!-- Search model end -->
+

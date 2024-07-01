@@ -1,0 +1,140 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\bootstrap.min.css" />
+    <None Include="wwwroot\css\elegant-icons.css" />
+    <None Include="wwwroot\css\font-awesome.min.css" />
+    <None Include="wwwroot\css\nice-select.css" />
+    <None Include="wwwroot\css\owl.carousel.min.css" />
+    <None Include="wwwroot\css\plyr.css" />
+    <None Include="wwwroot\css\slicknav.min.css" />
+    <None Include="wwwroot\css\style.css" />
+    <None Include="wwwroot\img\anime\details-pic.jpg" />
+    <None Include="wwwroot\img\anime\review-1.jpg" />
+    <None Include="wwwroot\img\anime\review-2.jpg" />
+    <None Include="wwwroot\img\anime\review-3.jpg" />
+    <None Include="wwwroot\img\anime\review-4.jpg" />
+    <None Include="wwwroot\img\anime\review-5.jpg" />
+    <None Include="wwwroot\img\anime\review-6.jpg" />
+    <None Include="wwwroot\img\blog\blog-1.jpg" />
+    <None Include="wwwroot\img\blog\blog-10.jpg" />
+    <None Include="wwwroot\img\blog\blog-11.jpg" />
+    <None Include="wwwroot\img\blog\blog-12.jpg" />
+    <None Include="wwwroot\img\blog\blog-2.jpg" />
+    <None Include="wwwroot\img\blog\blog-3.jpg" />
+    <None Include="wwwroot\img\blog\blog-4.jpg" />
+    <None Include="wwwroot\img\blog\blog-5.jpg" />
+    <None Include="wwwroot\img\blog\blog-6.jpg" />
+    <None Include="wwwroot\img\blog\blog-7.jpg" />
+    <None Include="wwwroot\img\blog\blog-8.jpg" />
+    <None Include="wwwroot\img\blog\blog-9.jpg" />
+    <None Include="wwwroot\img\blog\details\bd-item-1.jpg" />
+    <None Include="wwwroot\img\blog\details\bd-item-2.jpg" />
+    <None Include="wwwroot\img\blog\details\bd-item-3.jpg" />
+    <None Include="wwwroot\img\blog\details\blog-details-pic.jpg" />
+    <None Include="wwwroot\img\blog\details\comment-1.png" />
+    <None Include="wwwroot\img\blog\details\comment-2.png" />
+    <None Include="wwwroot\img\blog\details\comment-3.png" />
+    <None Include="wwwroot\img\hero\hero-1.jpg" />
+    <None Include="wwwroot\img\live\live-1.jpg" />
+    <None Include="wwwroot\img\live\live-2.jpg" />
+    <None Include="wwwroot\img\live\live-3.jpg" />
+    <None Include="wwwroot\img\live\live-4.jpg" />
+    <None Include="wwwroot\img\live\live-5.jpg" />
+    <None Include="wwwroot\img\live\live-6.jpg" />
+    <None Include="wwwroot\img\logo.png" />
+    <None Include="wwwroot\img\normal-breadcrumb.jpg" />
+    <None Include="wwwroot\img\popular\popular-1.jpg" />
+    <None Include="wwwroot\img\popular\popular-2.jpg" />
+    <None Include="wwwroot\img\popular\popular-3.jpg" />
+    <None Include="wwwroot\img\popular\popular-4.jpg" />
+    <None Include="wwwroot\img\popular\popular-5.jpg" />
+    <None Include="wwwroot\img\popular\popular-6.jpg" />
+    <None Include="wwwroot\img\recent\recent-1.jpg" />
+    <None Include="wwwroot\img\recent\recent-2.jpg" />
+    <None Include="wwwroot\img\recent\recent-3.jpg" />
+    <None Include="wwwroot\img\recent\recent-4.jpg" />
+    <None Include="wwwroot\img\recent\recent-5.jpg" />
+    <None Include="wwwroot\img\recent\recent-6.jpg" />
+    <None Include="wwwroot\img\sidebar\comment-1.jpg" />
+    <None Include="wwwroot\img\sidebar\comment-2.jpg" />
+    <None Include="wwwroot\img\sidebar\comment-3.jpg" />
+    <None Include="wwwroot\img\sidebar\comment-4.jpg" />
+    <None Include="wwwroot\img\sidebar\tv-1.jpg" />
+    <None Include="wwwroot\img\sidebar\tv-2.jpg" />
+    <None Include="wwwroot\img\sidebar\tv-3.jpg" />
+    <None Include="wwwroot\img\sidebar\tv-4.jpg" />
+    <None Include="wwwroot\img\sidebar\tv-5.jpg" />
+    <None Include="wwwroot\img\trending\trend-1.jpg" />
+    <None Include="wwwroot\img\trending\trend-2.jpg" />
+    <None Include="wwwroot\img\trending\trend-3.jpg" />
+    <None Include="wwwroot\img\trending\trend-4.jpg" />
+    <None Include="wwwroot\img\trending\trend-5.jpg" />
+    <None Include="wwwroot\img\trending\trend-6.jpg" />
+    <None Include="wwwroot\js\bootstrap.min.js" />
+    <None Include="wwwroot\fonts\ElegantIcons.eot" />
+    <None Include="wwwroot\fonts\ElegantIcons.svg" />
+    <None Include="wwwroot\fonts\ElegantIcons.ttf" />
+    <None Include="wwwroot\fonts\ElegantIcons.woff" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.eot" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.svg" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.ttf" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.woff" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.woff2" />
+    <None Include="wwwroot\fonts\FontAwesome.otf" />
+    <None Include="wwwroot\js\jquery-3.3.1.min.js" />
+    <None Include="wwwroot\js\jquery.nice-select.min.js" />
+    <None Include="wwwroot\js\jquery.slicknav.js" />
+    <None Include="wwwroot\js\main.js" />
+    <None Include="wwwroot\js\mixitup.min.js" />
+    <None Include="wwwroot\js\owl.carousel.min.js" />
+    <None Include="wwwroot\js\player.js" />
+    <None Include="wwwroot\sass\style.scss" />
+    <None Include="wwwroot\sass\_anime-details.scss" />
+    <None Include="wwwroot\sass\_anime-watching.scss" />
+    <None Include="wwwroot\sass\_base.scss" />
+    <None Include="wwwroot\sass\_blog-details.scss" />
+    <None Include="wwwroot\sass\_blog.scss" />
+    <None Include="wwwroot\sass\_breadcrumb.scss" />
+    <None Include="wwwroot\sass\_footer.scss" />
+    <None Include="wwwroot\sass\_header.scss" />
+    <None Include="wwwroot\sass\_hero.scss" />
+    <None Include="wwwroot\sass\_login.scss" />
+    <None Include="wwwroot\sass\_mixins.scss" />
+    <None Include="wwwroot\sass\_product.scss" />
+    <None Include="wwwroot\sass\_responsive.scss" />
+    <None Include="wwwroot\sass\_signup.scss" />
+    <None Include="wwwroot\sass\_variable.scss" />
+    <None Include="wwwroot\Source\bootstrap-4.4.1-dist.zip" />
+    <None Include="wwwroot\Source\elegant_font.zip" />
+    <None Include="wwwroot\Source\font-awesome-4.7.0.zip" />
+    <None Include="wwwroot\Source\jquery-nice-select-1.1.0.zip" />
+    <None Include="wwwroot\Source\OwlCarousel2-2.3.4.zip" />
+    <None Include="wwwroot\Source\plyr-master.zip" />
+    <None Include="wwwroot\Source\sass.zip" />
+    <None Include="wwwroot\Source\SlickNav-master.zip" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CloudinaryDotNet" Version="1.20.0" />
+    <PackageReference Include="dotenv.net" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="uploads\" />
+    <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+
+</Project>
