@@ -1,0 +1,81 @@
+﻿@page "{id=0}"
+@model EvoltingStore.Pages.Management.UserDetailsModel
+@using EvoltingStore.Entity
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "User Profile";
+}
+
+@{
+    var user = (String)HttpContext.Session.GetString("user");
+    var userDetail = (String)HttpContext.Session.GetString("userDetail");
+
+    var userData = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(user);
+    var userDetailData = (UserDetail)Newtonsoft.Json.JsonConvert.DeserializeObject<UserDetail>(userDetail);
+
+    var profile = (UserDetail)ViewData["profile"];
+}
+
+<!-- Page Preloder -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<!-- Header Section Begin -->
+<header class="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="header__logo">
+                    <a href="/Index">
+                        <img src="img/logo.png" alt="">
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="header__nav">
+                    <nav class="header__menu mobile-menu">
+                        <ul>
+                            <li><a href="/Index">Homepage</a></li>
+                            <li><a href="/Categories">Browse</a></li>
+                            <li><a href="#">Our Blog</a></li>
+                            <li><a href="#">Contacts</a></li>
+                            @if (userData != null)
+                            {
+                                    <li><a href="#">My Favourite</a></li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="header__right">
+                    <a href="#" class="search-switch"><span class="icon_search"></span></a>
+                    @if (user != null)
+                    {
+                            <a href="/Profile"><span class="icon_profile"></span></a>
+                    }
+                    else
+                    {
+                            <a href="/Login">Login Now</a>
+                    }
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+    </div>
+</header>
+<!-- Header End -->
+
+<div class="container rounded bg-white mt-5 mb-5"> 
+    <div class="row"> 
+        <div class="border-right"> 
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                <img class="rounded-circle mt-5" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQF2psCzfbB611rnUhxgMi-lc2oB78ykqDGYb4v83xQ1pAbhPiB&usqp=CAU">
+                <span class="font-weight-bold">@profile.FirstName @profile.LastName</span>
+                <span class="text-black-50">@profile.Email</span>
+                <span> </span>
+            </div> 
+        </div>  
+    </div>
+</div>
