@@ -1,2 +1,2 @@
 # EvoltGaming
-Use command line or github desttop to clone project
+Use command line or github desktop to clone project
