@@ -20,9 +20,8 @@ namespace EvoltingStore.Entity
         public DateTime ReleaseDate { get; set; }
         public DateTime UpdateDate { get; set; }
         public string Platform { get; set; } = null!;
-        public string? PirateLink { get; set; }
-        public string? OfficialLink { get; set; }
-        public string? Image { get; set; }
+        public string Image { get; set; }
+        public double Price { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<GameRequirement> GameRequirements { get; set; }

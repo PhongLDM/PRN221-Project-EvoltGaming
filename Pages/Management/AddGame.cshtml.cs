@@ -49,31 +49,17 @@ namespace EvoltingStore.Pages.Management
 
             if (gameImg != null)
             {
-                var file = Path.Combine(_environment.ContentRootPath, "uploads", gameImg.FileName);
-                using (var fileStream = new FileStream(file, FileMode.Create))
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+                var filePath = Path.Combine(uploadsFolder, gameImg.FileName);
+                Directory.CreateDirectory(uploadsFolder);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
                     await gameImg.CopyToAsync(fileStream);
                 }
+                game.Image = filePath;
             }
 
-            DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
-            Cloudinary cloudinary = new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"));
-            cloudinary.Api.Secure = true;
 
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(Path.Combine(_environment.ContentRootPath, "uploads", gameImg.FileName)),
-                UseFilename = true,
-                UniqueFilename = false,
-                Overwrite = true
-            };
-            var uploadResult = cloudinary.Upload(uploadParams);
-            var myJsonString = uploadResult.JsonObj.ToString();
-            var data = JObject.Parse(myJsonString);
-
-            var url = data["url"].ToString();
-
-            game.Image = url;
             game.UpdateDate = DateTime.Now;
 
             foreach(var g in genres)
