@@ -44,7 +44,8 @@
                             <li><a href="#">Contacts</a></li>
                             @if (userData != null)
                             {
-                                    <li><a href="#">My Favourite</a></li>
+                                <li><a href="#">My Favourite</a></li>
+                                <li><a href="/Cart">Cart</a></li>
                             }
                         </ul>
                     </nav>
@@ -52,23 +53,22 @@
             </div>
             <div class="col-lg-2">
                 <div class="header__right">
-                        <a href="#" class="search-switch"><span class="icon_search"></span></a>
+                    <a href="#" class="search-switch"><span class="icon_search"></span></a>
                     @if (user != null)
                     {
-                                    <a href="/Profile"><span class="icon_profile"></span></a>
+                        <a href="/Profile"><span class="icon_profile"></span></a>
                     }
                     else
                     {
-                                    <a href="/Login">Login Now</a>
+                        <a href="/Login">Login Now</a>
                     }
-                    </div>
+                </div>
             </div>
         </div>
         <div id="mobile-menu-wrap"></div>
     </div>
 </header>
 <!-- Header End -->
-
 <!-- Product Section Begin -->
 <section class="product-page spad">
     <div class="container">
@@ -80,7 +80,7 @@
                         {
                             <div class="col-lg-6 col-md-12">
                                 <div class="product__item">
-                                        <div class="product__item__pic set-bg" data-setbg="@n.Image">
+                                    <div class="product__item__pic set-bg" data-setbg="@n.Image">
                                         <div class="ep">@n.Date</div>
                                     </div>
                                     <div class="product__item__text">
@@ -104,7 +104,7 @@
                                     <div class="form-group m-2">
                                         <label for="searchName"><h3 style="color: papayawhip">Search</h3></label>
                                         <div>
-                                            <input type="text" name="query" placeholder="Game Name"/>
+                                            <input type="text" name="query" placeholder="Game Name" />
                                         </div>
                                     </div>
                                     <input class="btn btn-primary m-2" type="submit" value="Filter" />
@@ -118,7 +118,6 @@
     </div>
 </section>
 <!-- Product Section End -->
-
 <!-- Footer Section Begin -->
 <footer class="footer">
     <div class="page-up">
@@ -142,18 +141,19 @@
                 </div>
             </div>
             <div class="col-lg-3">
-                <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                <p>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                     Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                </p>
 
-                </div>
             </div>
         </div>
-    </footer>
-    <!-- Footer Section End -->
-
-    <!-- Search model Begin -->
-    <div class="search-model">
+    </div>
+</footer>
+<!-- Footer Section End -->
+<!-- Search model Begin -->
+<div class="search-model">
     <div class="h-100 d-flex align-items-center justify-content-center">
         <div class="search-close-switch"><i class="icon_close"></i></div>
         <form class="search-model-form">
@@ -162,4 +162,3 @@
     </div>
 </div>
 <!-- Search model end -->
-
