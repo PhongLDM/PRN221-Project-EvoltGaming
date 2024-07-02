@@ -10,5 +10,7 @@ namespace EvoltingStore.Entity
         public string Content { get; set; } = null!;
         public DateTime? CreateDate { get; set; }
         public int GenreId { get; set; }
+
+        public virtual Genre Genre { get; set; } = null!;
     }
 }

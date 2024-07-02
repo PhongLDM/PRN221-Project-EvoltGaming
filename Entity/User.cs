@@ -18,8 +18,9 @@ namespace EvoltingStore.Entity
         public string Password { get; set; } = null!;
         public int RoleId { get; set; }
         public bool IsActive { get; set; }
-        public int CartId { get; set; }
+        public int? CartId { get; set; }
 
+        public virtual Cart? Cart { get; set; }
         public virtual Role Role { get; set; } = null!;
         public virtual UserDetail? UserDetail { get; set; }
         public virtual ICollection<Cart> Carts { get; set; }

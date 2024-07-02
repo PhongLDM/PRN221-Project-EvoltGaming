@@ -8,6 +8,7 @@ namespace EvoltingStore.Entity
         public Cart()
         {
             CartItems = new HashSet<CartItem>();
+            Users = new HashSet<User>();
         }
 
         public int Id { get; set; }
@@ -15,5 +16,6 @@ namespace EvoltingStore.Entity
 
         public virtual User User { get; set; } = null!;
         public virtual ICollection<CartItem> CartItems { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }
