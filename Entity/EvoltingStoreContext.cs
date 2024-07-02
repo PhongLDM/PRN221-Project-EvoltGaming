@@ -17,6 +17,7 @@ namespace EvoltingStore.Entity
         }
 
         public virtual DbSet<Blog> Blogs { get; set; } = null!;
+        public virtual DbSet<Cart> Carts { get; set; } = null!;
         public virtual DbSet<CartItem> CartItems { get; set; } = null!;
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<Game> Games { get; set; } = null!;
@@ -32,8 +33,8 @@ namespace EvoltingStore.Entity
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("server= (local); database= EvoltingStore;uid=sa;pwd=12345;TrustServerCertificate=True;");
+                var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+                optionsBuilder.UseSqlServer(config.GetConnectionString("EvoltingStore"));
             }
         }
 
@@ -47,15 +48,30 @@ namespace EvoltingStore.Entity
                     .ValueGeneratedNever()
                     .HasColumnName("id");
 
-                entity.Property(e => e.Content)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.Content).HasMaxLength(250);
 
                 entity.Property(e => e.CreateDate).HasColumnType("date");
 
                 entity.Property(e => e.GenreId).HasColumnName("genreId");
 
                 entity.Property(e => e.Title).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Cart>(entity =>
+            {
+                entity.ToTable("Cart");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.UserId).HasColumnName("userId");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Carts)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Cart_User");
             });
 
             modelBuilder.Entity<CartItem>(entity =>
@@ -70,22 +86,17 @@ namespace EvoltingStore.Entity
 
                 entity.Property(e => e.GameId).HasColumnName("gameId");
 
-                entity.HasMany(d => d.Users)
-                    .WithMany(p => p.Ids)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "Cart",
-                        l => l.HasOne<User>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Cart_User"),
-                        r => r.HasOne<CartItem>().WithMany().HasForeignKey("Id").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Cart_CartItem"),
-                        j =>
-                        {
-                            j.HasKey("Id", "UserId");
+                entity.HasOne(d => d.Cart)
+                    .WithMany(p => p.CartItems)
+                    .HasForeignKey(d => d.CartId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CartItem_Cart");
 
-                            j.ToTable("Cart");
-
-                            j.IndexerProperty<int>("Id").HasColumnName("id");
-
-                            j.IndexerProperty<int>("UserId").HasColumnName("userId");
-                        });
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.CartItems)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CartItem_Game");
             });
 
             modelBuilder.Entity<Comment>(entity =>
@@ -99,7 +110,6 @@ namespace EvoltingStore.Entity
                 entity.Property(e => e.CommentId).HasColumnName("commentId");
 
                 entity.Property(e => e.Content)
-                    .IsRequired()
                     .HasColumnType("text")
                     .HasColumnName("content");
 
@@ -131,7 +141,6 @@ namespace EvoltingStore.Entity
                 entity.Property(e => e.GameId).HasColumnName("gameId");
 
                 entity.Property(e => e.Description)
-                    .IsRequired()
                     .HasColumnType("text")
                     .HasColumnName("description");
 
@@ -140,13 +149,11 @@ namespace EvoltingStore.Entity
                     .HasColumnName("image");
 
                 entity.Property(e => e.Name)
-                    .IsRequired()
                     .HasMaxLength(150)
                     .IsUnicode(false)
                     .HasColumnName("name");
 
                 entity.Property(e => e.Platform)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("platform");
@@ -154,7 +161,6 @@ namespace EvoltingStore.Entity
                 entity.Property(e => e.Price).HasColumnName("price");
 
                 entity.Property(e => e.Publisher)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("publisher");
@@ -228,7 +234,6 @@ namespace EvoltingStore.Entity
                 entity.Property(e => e.Memory).HasColumnName("memory");
 
                 entity.Property(e => e.Os)
-                    .IsRequired()
                     .HasColumnType("text")
                     .HasColumnName("os");
 
@@ -237,7 +242,6 @@ namespace EvoltingStore.Entity
                     .HasColumnName("other");
 
                 entity.Property(e => e.Processor)
-                    .IsRequired()
                     .HasColumnType("text")
                     .HasColumnName("processor");
 
@@ -257,7 +261,6 @@ namespace EvoltingStore.Entity
                 entity.Property(e => e.GenreId).HasColumnName("genreId");
 
                 entity.Property(e => e.GenreName)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("genreName");
@@ -296,6 +299,12 @@ namespace EvoltingStore.Entity
 
                 entity.Property(e => e.OrderId).HasColumnName("orderId");
 
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetail_Game");
+
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.OrderId)
@@ -310,7 +319,6 @@ namespace EvoltingStore.Entity
                 entity.Property(e => e.RoleId).HasColumnName("roleId");
 
                 entity.Property(e => e.RoleName)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("roleName");
@@ -336,7 +344,6 @@ namespace EvoltingStore.Entity
                 entity.Property(e => e.IsActive).HasColumnName("isActive");
 
                 entity.Property(e => e.Password)
-                    .IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false)
                     .HasColumnName("password");
@@ -344,7 +351,6 @@ namespace EvoltingStore.Entity
                 entity.Property(e => e.RoleId).HasColumnName("roleId");
 
                 entity.Property(e => e.Username)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("username");
@@ -371,13 +377,11 @@ namespace EvoltingStore.Entity
                     .HasColumnName("createdDate");
 
                 entity.Property(e => e.Email)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("email");
 
                 entity.Property(e => e.FirstName)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("firstName");
@@ -387,7 +391,6 @@ namespace EvoltingStore.Entity
                     .HasColumnName("image");
 
                 entity.Property(e => e.LastName)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("lastName");
