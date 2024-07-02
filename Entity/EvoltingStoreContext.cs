@@ -44,26 +44,34 @@ namespace EvoltingStore.Entity
             {
                 entity.ToTable("Blog");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Content).HasMaxLength(250);
+                entity.Property(e => e.Content)
+                    .HasMaxLength(250)
+                    .HasColumnName("content");
 
-                entity.Property(e => e.CreateDate).HasColumnType("date");
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("date")
+                    .HasColumnName("createDate");
 
                 entity.Property(e => e.GenreId).HasColumnName("genreId");
 
-                entity.Property(e => e.Title).HasMaxLength(50);
+                entity.Property(e => e.Title)
+                    .HasMaxLength(50)
+                    .HasColumnName("title");
+
+                entity.HasOne(d => d.Genre)
+                    .WithMany(p => p.Blogs)
+                    .HasForeignKey(d => d.GenreId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Blog_Genre");
             });
 
             modelBuilder.Entity<Cart>(entity =>
             {
                 entity.ToTable("Cart");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.UserId).HasColumnName("userId");
 
@@ -78,9 +86,7 @@ namespace EvoltingStore.Entity
             {
                 entity.ToTable("CartItem");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CartId).HasColumnName("cartId");
 
@@ -102,10 +108,6 @@ namespace EvoltingStore.Entity
             modelBuilder.Entity<Comment>(entity =>
             {
                 entity.ToTable("Comment");
-
-                entity.HasIndex(e => e.GameId, "IX_Comment_gameId");
-
-                entity.HasIndex(e => e.UserId, "IX_Comment_userId");
 
                 entity.Property(e => e.CommentId).HasColumnName("commentId");
 
@@ -181,11 +183,9 @@ namespace EvoltingStore.Entity
                         r => r.HasOne<Game>().WithMany().HasForeignKey("GameId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_GameGenre_Game"),
                         j =>
                         {
-                            j.HasKey("GameId", "GenreId");
+                            j.HasKey("GameId", "GenreId").HasName("PK__GameGenr__E955F33AE77E0B6B");
 
                             j.ToTable("GameGenre");
-
-                            j.HasIndex(new[] { "GenreId" }, "IX_GameGenre_genreId");
 
                             j.IndexerProperty<int>("GameId").HasColumnName("gameId");
 
@@ -200,11 +200,9 @@ namespace EvoltingStore.Entity
                         r => r.HasOne<Game>().WithMany().HasForeignKey("GameId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Favourite_Game"),
                         j =>
                         {
-                            j.HasKey("GameId", "UserId");
+                            j.HasKey("GameId", "UserId").HasName("PK__Favourit__3629159D50DBC417");
 
                             j.ToTable("Favourite");
-
-                            j.HasIndex(new[] { "UserId" }, "IX_Favourite_userId");
 
                             j.IndexerProperty<int>("GameId").HasColumnName("gameId");
 
@@ -214,7 +212,8 @@ namespace EvoltingStore.Entity
 
             modelBuilder.Entity<GameRequirement>(entity =>
             {
-                entity.HasKey(e => new { e.GameId, e.Type });
+                entity.HasKey(e => new { e.GameId, e.Type })
+                    .HasName("PK__GameRequ__54AF3176DC333DBC");
 
                 entity.ToTable("GameRequirement");
 
@@ -276,6 +275,8 @@ namespace EvoltingStore.Entity
                     .HasColumnType("date")
                     .HasColumnName("orderDate");
 
+                entity.Property(e => e.Status).HasColumnName("status");
+
                 entity.Property(e => e.TotalPrice).HasColumnName("totalPrice");
 
                 entity.Property(e => e.UserId).HasColumnName("userId");
@@ -291,9 +292,7 @@ namespace EvoltingStore.Entity
             {
                 entity.ToTable("OrderDetail");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.GameId).HasColumnName("gameId");
 
@@ -328,18 +327,9 @@ namespace EvoltingStore.Entity
             {
                 entity.ToTable("User");
 
-                entity.HasIndex(e => e.RoleId, "IX_User_roleId");
+                entity.Property(e => e.UserId).HasColumnName("userId");
 
-                entity.HasIndex(e => e.Username, "Unique_username")
-                    .IsUnique();
-
-                entity.Property(e => e.UserId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("userId");
-
-                entity.Property(e => e.CartId)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("cartId");
+                entity.Property(e => e.CartId).HasColumnName("cartId");
 
                 entity.Property(e => e.IsActive).HasColumnName("isActive");
 
@@ -355,6 +345,11 @@ namespace EvoltingStore.Entity
                     .IsUnicode(false)
                     .HasColumnName("username");
 
+                entity.HasOne(d => d.Cart)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.CartId)
+                    .HasConstraintName("FK_User_Cart");
+
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.RoleId)
@@ -364,7 +359,8 @@ namespace EvoltingStore.Entity
 
             modelBuilder.Entity<UserDetail>(entity =>
             {
-                entity.HasKey(e => e.UserId);
+                entity.HasKey(e => e.UserId)
+                    .HasName("PK__UserDeta__CB9A1CFFC7F7BFD5");
 
                 entity.ToTable("UserDetail");
 
