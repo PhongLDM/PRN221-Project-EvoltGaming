@@ -17,7 +17,7 @@
     var userData = (User)ViewData["userDetail"];
     if (user != null)
     {
-        userData = (User) Newtonsoft.Json.JsonConvert.DeserializeObject<User>(user);
+        userData = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(user);
     }
 }
 
@@ -47,7 +47,7 @@
                             <li><a href="#">Contacts</a></li>
                             @if (userData != null)
                             {
-                                    <li><a href="#">My Favourite</a></li>
+                                <li><a href="#">My Favourite</a></li>
                             }
                         </ul>
                     </nav>
@@ -55,23 +55,22 @@
             </div>
             <div class="col-lg-2">
                 <div class="header__right">
-                        <a href="#" class="search-switch"><span class="icon_search"></span></a>
+                    <a href="#" class="search-switch"><span class="icon_search"></span></a>
                     @if (user != null)
                     {
-                                    <a href="/Profile"><span class="icon_profile"></span></a>
+                        <a href="/Profile"><span class="icon_profile"></span></a>
                     }
                     else
                     {
-                                    <a href="/Login">Login Now</a>
+                        <a href="/Login">Login Now</a>
                     }
-                    </div>
+                </div>
             </div>
         </div>
         <div id="mobile-menu-wrap"></div>
     </div>
 </header>
 <!-- Header End -->
-
 <!-- Breadcrumb Begin -->
 <div class="breadcrumb-option">
     <div class="container">
@@ -87,7 +86,6 @@
     </div>
 </div>
 <!-- Breadcrumb End -->
-
 <!-- Anime Section Begin -->
 <section class="anime-details spad">
     <div class="container">
@@ -143,159 +141,168 @@
                             </div>
                         </div>
                         <div class="anime__details__btn">
-                            @if(user == null){
+                            @if (user == null)
+                            {
                                 <a href="/Login"><button class="btn btn-danger">Login to Download this Game</button></a>
                             }
-                            else{
+                            else
+                            {
                                 <button onclick="myFunction()" style="border-radius: 12px;" class="dropbtn mr-2">Download Now</button>
                                 <form method="post" asp-page-handler="Favourite">
-                                    <input type="text" name="gameId" value="@game.GameId" hidden/>
-                                    <input type="submit" class="follow-btn" value="@(isFavourite ? "Remove from Favourite" : "Add to Favourite")"/>
+                                    <input type="text" name="gameId" value="@game.GameId" hidden />
+                                    <input type="submit" class="follow-btn" value="@(isFavourite ? "Remove from Favourite" : "Add to Favourite")" />
+                                </form>
+                                <form method="post" asp-page="/Cart" asp-page-handler="Add">
+                                    <input type="hidden" name="gameId" value="@game.GameId" />
+                                    <button type="submit" class="btn btn-primary">Add to Cart</button>
                                 </form>
                             }
                         </div>
                     </div>
-                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-8 col-md-8">
-                    <div class="anime__details__review" id="anime__details__review">
-                        <div class="section-title">
-                            <h5>Reviews</h5>
-                        </div>
-                        @if(game.Comments.Count == 0){
-                            <div class="anime__review__item">
-                                <h6 style="color: papayawhip">No comments yet</h6>
-                            </div>
-                        }
-                        else{
-                            @foreach (var c in game.Comments)
-                            {
-                                <div class="anime__review__item">
-                                    <div class="anime__review__item__pic">
-                                        <img src="img/anime/review-1.jpg" alt="">
-                                    </div>
-                                    <div class="anime__review__item__text">
-                                        <h6>@c.User.Username - <span>@c.PostTime.ToShortDateString() @c.PostTime.ToShortTimeString()</span></h6>
-                                        <p>@c.Content</p>
-                                    </div>
-                                </div>
-                            }
-                        }
-                        
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-md-8">
+                <div class="anime__details__review" id="anime__details__review">
+                    <div class="section-title">
+                        <h5>Reviews</h5>
                     </div>
-                    @if(user != null){
-                        <div class="anime__details__form">
-                            <div class="section-title">
-                                <h5>Your Comment</h5>
-                            </div>
-                            <form action="#">
-                                <input type="text" id="gameId" value="@game.GameId" hidden readonly>
-                                <input type="text" id="userId" value="@userData.UserId" hidden readonly>
-                                <textarea id="messageInput" placeholder="Your Comment"></textarea>
-                                <button id="sendButton"><i class="fa fa-location-arrow"></i> Review</button>
-                            </form>
+                    @if (game.Comments.Count == 0)
+                    {
+                        <div class="anime__review__item">
+                            <h6 style="color: papayawhip">No comments yet</h6>
                         </div>
                     }
+                    else
+                    {
+                        @foreach (var c in game.Comments)
+                        {
+                            <div class="anime__review__item">
+                                <div class="anime__review__item__pic">
+                                    <img src="img/anime/review-1.jpg" alt="">
+                                </div>
+                                <div class="anime__review__item__text">
+                                    <h6>@c.User.Username - <span>@c.PostTime.ToShortDateString() @c.PostTime.ToShortTimeString()</span></h6>
+                                    <p>@c.Content</p>
+                                </div>
+                            </div>
+                        }
+                    }
+
                 </div>
-                <div class="col-lg-4 col-md-4">
-                    <div class="anime__details__sidebar">
+                @if (user != null)
+                {
+                    <div class="anime__details__form">
                         <div class="section-title">
-                            <h5>you might like...</h5>
+                            <h5>Your Comment</h5>
                         </div>
-
-@*                        <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-1.jpg">
-                            <div class="ep">18 / ?</div>
-                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                            <h5><a href="#">Boruto: Naruto next generations</a></h5>
-                        </div>
-                        <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-2.jpg">
-                            <div class="ep">18 / ?</div>
-                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                            <h5><a href="#">The Seven Deadly Sins: Wrath of the Gods</a></h5>
-                        </div>
-                        <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-3.jpg">
-                            <div class="ep">18 / ?</div>
-                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                            <h5><a href="#">Sword art online alicization war of underworld</a></h5>
-                        </div>
-                        <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-4.jpg">
-                            <div class="ep">18 / ?</div>
-                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                            <h5><a href="#">Fate/stay night: Heaven's Feel I. presage flower</a></h5>
-                        </div>*@
+                        <form action="#">
+                            <input type="text" id="gameId" value="@game.GameId" hidden readonly>
+                            <input type="text" id="userId" value="@userData.UserId" hidden readonly>
+                            <textarea id="messageInput" placeholder="Your Comment"></textarea>
+                            <button id="sendButton"><i class="fa fa-location-arrow"></i> Review</button>
+                        </form>
                     </div>
+                }
+            </div>
+            <div class="col-lg-4 col-md-4">
+                <div class="anime__details__sidebar">
+                    <div class="section-title">
+                        <h5>you might like...</h5>
+                    </div>
+
+                    @*                        <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-1.jpg">
+                    <div class="ep">18 / ?</div>
+                    <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                    <h5><a href="#">Boruto: Naruto next generations</a></h5>
+                    </div>
+                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-2.jpg">
+                    <div class="ep">18 / ?</div>
+                    <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                    <h5><a href="#">The Seven Deadly Sins: Wrath of the Gods</a></h5>
+                    </div>
+                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-3.jpg">
+                    <div class="ep">18 / ?</div>
+                    <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                    <h5><a href="#">Sword art online alicization war of underworld</a></h5>
+                    </div>
+                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-4.jpg">
+                    <div class="ep">18 / ?</div>
+                    <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                    <h5><a href="#">Fate/stay night: Heaven's Feel I. presage flower</a></h5>
+                    </div>*@
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- Anime Section End -->
-
-    <!-- Footer Section Begin -->
-    <footer class="footer">
-        <div class="page-up">
-            <a href="#" id="scrollToTopButton"><span class="arrow_carrot-up"></span></a>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="footer__logo">
-                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="footer__nav">
-                        <ul>
-                            <li><a href="/Index">Homepage</a></li>
-                            <li><a href="/Categories">Browse</a></li>
-                            <li><a href="#">Our Blog</a></li>
-                            <li><a href="#">Contacts</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
-
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <!-- Footer Section End -->
-
-    <!-- Search model Begin -->
-    <div class="search-model">
-        <div class="h-100 d-flex align-items-center justify-content-center">
-            <div class="search-close-switch"><i class="icon_close"></i></div>
-            <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
-            </form>
         </div>
     </div>
-    <!-- Search model end -->
+</section>
+<!-- Anime Section End -->
+<!-- Footer Section Begin -->
+<footer class="footer">
+    <div class="page-up">
+        <a href="#" id="scrollToTopButton"><span class="arrow_carrot-up"></span></a>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="footer__logo">
+                    <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="footer__nav">
+                    <ul>
+                        <li><a href="/Index">Homepage</a></li>
+                        <li><a href="/Categories">Browse</a></li>
+                        <li><a href="#">Our Blog</a></li>
+                        <li><a href="#">Contacts</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <p>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer Section End -->
+<!-- Search model Begin -->
+<div class="search-model">
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <div class="search-close-switch"><i class="icon_close"></i></div>
+        <form class="search-model-form">
+            <input type="text" id="search-input" placeholder="Search here.....">
+        </form>
+    </div>
+</div>
+<!-- Search model end -->
 
 
 <script>
-    /* When the user clicks on the button, 
+    /* When the user clicks on the button,
     toggle between hiding and showing the dropdown content */
     function myFunction() {
-      document.getElementById("myDropdown").classList.toggle("show");
+        document.getElementById("myDropdown").classList.toggle("show");
     }
 
     // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-      if (!event.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
+    window.onclick = function (event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
         }
-      }
     }
 </script>
 
@@ -304,41 +311,45 @@
 
 <style>
     .dropbtn {
-      background-color: #3498DB;
-      color: white;
-      padding: 16px;
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
+        background-color: #3498DB;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
     }
 
-    .dropbtn:hover, .dropbtn:focus {
-      background-color: #2980B9;
-    }
+        .dropbtn:hover, .dropbtn:focus {
+            background-color: #2980B9;
+        }
 
     .dropdown {
-      position: relative;
-      display: inline-block;
+        position: relative;
+        display: inline-block;
     }
 
     .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #f1f1f1;
-      min-width: 160px;
-      overflow: auto;
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-      z-index: 1;
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        overflow: auto;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
     }
 
-    .dropdown-content a {
-      color: black;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+    .dropdown a:hover {
+        background-color: #ddd;
     }
 
-    .dropdown a:hover {background-color: #ddd;}
-
-    .show {display: block;}
+    .show {
+        display: block;
+    }
 </style>
