@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace EvoltingStore.Pages
 {
@@ -24,7 +25,9 @@ namespace EvoltingStore.Pages
 
         public IActionResult OnPost(String username, String password)
         {
-            User user = context.Users.FirstOrDefault(u => u.Username.Equals(username) && u.Password.Equals(password));
+            User user = context.Users
+                .Include(u => u.UserDetail)
+                .FirstOrDefault(u => u.Username.Equals(username) && u.Password.Equals(password));
 
             if (user == null)
             {
