@@ -77,7 +77,6 @@
                         <th>User Id</th>
                         <th>Total Price</th>
                         <th>Order Date</th>
-                        <th>Payment</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -89,7 +88,6 @@
                             <td>@g.UserId</td>
                             <td>@g.TotalPrice</td>
                             <td>@g.OrderDate.ToShortDateString()</td>
-                            <td>@g.Payment</td>
                             <td>@g.Status</td>
                             <td>
                                 <form action="/Management/Orders" method="GET">
