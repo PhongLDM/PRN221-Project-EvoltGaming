@@ -1,102 +1,139 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using EvoltingStore.Entity;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.ConstrainedExecution;
 
 namespace EvoltingStore.Pages
 {
     public class CartModel : PageModel
     {
-        EvoltingStoreContext context = new EvoltingStoreContext();
+        private static int ROLE_USER = 2;
+        private readonly EvoltingStoreContext _context = new EvoltingStoreContext();
 
-        public List<CartItem> CartItems { get; set; }
-        public decimal TotalPrice => CartItems.Sum(item => item.Game.Price * item.Quantity);
+        [BindProperty(SupportsGet = true)]
+        public User? CurrentUser { get; set; } = null;
 
-        public async Task OnGetAsync()
+        Cart Cart { get; set; }
+
+        public IList<CartItem> CartItems { get; set; } = default!;
+
+        public double TotalPrice => CartItems.Sum(item => item.Game.Price);
+
+        public async Task<IActionResult> OnGetAsync()
         {
-            CartItems = await GetCartItemsAsync();
-        }
+            String userJSON = HttpContext.Session.GetString("user");
 
-        public async Task<IActionResult> OnPostAddAsync(int gameId, int quantity = 1)
-        {
-            var cartItems = await GetCartItemsAsync();
-            var cartItem = cartItems.FirstOrDefault(ci => ci.Game.GameId == gameId);
-
-            if (cartItem != null)
+            if (String.IsNullOrEmpty(userJSON))
             {
-                cartItem.Quantity += quantity;
+                return RedirectToPage("/Login");
+            }
+
+            User u = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
+            CurrentUser = await _context.Users
+                .Include(u => u.UserDetail)
+                .Include(u => u.Cart)
+                .FirstOrDefaultAsync(u => u.UserId == u.UserId);
+
+            if (CurrentUser != null)
+            {
+                if (CurrentUser.RoleId == ROLE_USER)
+                {
+                    Cart = await CheckCart();
+                    CartItems = await GetCartItemsAsync();
+                }
             }
             else
             {
-                var game = await _gameService.GetGameByIdAsync(gameId);
-                if (game != null)
+                return RedirectToPage("/Login");
+            }
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostAddAsync(int gameId)
+        {
+            String userJSON = HttpContext.Session.GetString("user");
+
+            if (String.IsNullOrEmpty(userJSON))
+            {
+                return RedirectToPage("/Login");
+            }
+
+            User u = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
+            CurrentUser = await _context.Users
+                .Include(u => u.UserDetail)
+                .Include(u => u.Cart)
+                .FirstOrDefaultAsync(u => u.UserId == u.UserId);
+
+            if (CurrentUser != null)
+            {
+                if (CurrentUser.RoleId == ROLE_USER)
                 {
-                    cartItems.Add(new CartItem
+                    Cart = await CheckCart();
+                    var cartItems = await GetCartItemsAsync();
+                    var cartItem = cartItems.FirstOrDefault(ci => ci.GameId == gameId);
+
+                    if (cartItem == null)
                     {
-                        Game = game,
-                        Quantity = quantity
-                    });
-                }
-            }
+                        var game = await _context.Games.FirstOrDefaultAsync(g => g.GameId == gameId);
+                        if (game != null)
+                        {
+                            await _context.CartItems.AddAsync(new CartItem
+                            {
+                                Cart = Cart,
+                                Game = game,
+                            });
+                        }
+                    }
 
-            await SaveCartItemsAsync(cartItems);
-            return RedirectToPage();
+                    await _context.SaveChangesAsync();
+                }
+                return RedirectToPage();
+            }
+            else
+            {
+                return RedirectToPage("/Login");
+            }
         }
 
-        public async Task<IActionResult> OnPostRemoveAsync(int gameId)
+        public async Task<IActionResult> OnPostRemoveAsync(int cartItemId)
         {
-            var cartItems = await GetCartItemsAsync();
-            var cartItem = cartItems.FirstOrDefault(ci => ci.Game.GameId == gameId);
-
-            if (cartItem != null)
+            if (cartItemId != 0)
             {
-                cartItems.Remove(cartItem);
-            }
-
-            await SaveCartItemsAsync(cartItems);
-            return RedirectToPage();
-        }
-
-        public async Task<IActionResult> OnPostUpdateAsync(int gameId, int quantity)
-        {
-            var cartItems = await GetCartItemsAsync();
-            var cartItem = cartItems.FirstOrDefault(ci => ci.Game.GameId == gameId);
-
-            if (cartItem != null)
-            {
-                if (quantity <= 0)
+                var cartItem = _context.CartItems.FirstOrDefault(ci => ci.Id == cartItemId);
+                if (cartItem != null)
                 {
-                    cartItems.Remove(cartItem);
+                    _context.CartItems.Remove(cartItem);
+                    await _context.SaveChangesAsync();
                 }
-                else
-                {
-                    cartItem.Quantity = quantity;
-                }
-            }
-
-            await SaveCartItemsAsync(cartItems);
+            } 
             return RedirectToPage();
         }
 
         private async Task<List<CartItem>> GetCartItemsAsync()
         {
-            var cart = HttpContext.Session.GetString("cart");
-            if (cart != null)
-            {
-                return await Task.FromResult(JsonConvert.DeserializeObject<List<CartItem>>(cart));
-            }
-
-            return new List<CartItem>();
+            return await _context.CartItems.Include(ci => ci.Game).Where(c => c.CartId == Cart.Id).ToListAsync();
         }
 
-        private async Task SaveCartItemsAsync(List<CartItem> cartItems)
+        private async Task<Cart> CheckCart()
         {
-            HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(cartItems));
-            await Task.CompletedTask;
+            
+            if (CurrentUser.CartId == null)
+            {
+                Cart c = new Cart()
+                {
+                    UserId = CurrentUser.UserId
+                };
+                await _context.AddAsync(c);
+                CurrentUser.Cart = c;
+                await _context.SaveChangesAsync();
+                return c;
+            }
+            else
+            {
+                return CurrentUser.Cart;
+            }
         }
     }
 }
