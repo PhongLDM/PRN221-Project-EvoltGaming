@@ -33,7 +33,6 @@ namespace EvoltingStore.Entity
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
                 optionsBuilder.UseSqlServer(config.GetConnectionString("EvoltingStore"));
             }
@@ -60,11 +59,11 @@ namespace EvoltingStore.Entity
 
             modelBuilder.Entity<Cart>(entity =>
             {
-                entity.HasKey(e => new { e.Id, e.UserId });
-
                 entity.ToTable("Cart");
 
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
 
                 entity.Property(e => e.UserId).HasColumnName("userId");
 
@@ -86,6 +85,18 @@ namespace EvoltingStore.Entity
                 entity.Property(e => e.CartId).HasColumnName("cartId");
 
                 entity.Property(e => e.GameId).HasColumnName("gameId");
+
+                entity.HasOne(d => d.Cart)
+                    .WithMany(p => p.CartItems)
+                    .HasForeignKey(d => d.CartId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CartItem_Cart");
+
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.CartItems)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CartItem_Game");
             });
 
             modelBuilder.Entity<Comment>(entity =>
@@ -287,6 +298,12 @@ namespace EvoltingStore.Entity
                 entity.Property(e => e.GameId).HasColumnName("gameId");
 
                 entity.Property(e => e.OrderId).HasColumnName("orderId");
+
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetail_Game");
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderDetails)
