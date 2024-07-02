@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace EvoltingStore.Entity
@@ -12,6 +13,7 @@ namespace EvoltingStore.Entity
         public DateTime CreatedDate { get; set; }
         public string? Image { get; set; }
 
+        [JsonIgnore]
         public virtual User User { get; set; } = null!;
     }
 }

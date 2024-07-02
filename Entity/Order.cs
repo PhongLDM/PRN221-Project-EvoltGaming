@@ -16,7 +16,7 @@ namespace EvoltingStore.Entity
         public bool Status { get; set; }
         public int UserId { get; set; }
 
-        public virtual User User { get; set; } = null!;
+        public virtual User User { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

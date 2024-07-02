@@ -7,10 +7,10 @@ namespace EvoltingStore.Entity
     {
         public User()
         {
-            Carts = new HashSet<Cart>();
             Comments = new HashSet<Comment>();
             Orders = new HashSet<Order>();
             Games = new HashSet<Game>();
+            Ids = new HashSet<CartItem>();
         }
 
         public int UserId { get; set; }
@@ -22,10 +22,10 @@ namespace EvoltingStore.Entity
 
         public virtual Role Role { get; set; } = null!;
         public virtual UserDetail? UserDetail { get; set; }
-        public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
 
         public virtual ICollection<Game> Games { get; set; }
+        public virtual ICollection<CartItem> Ids { get; set; }
     }
 }
