@@ -1,7 +1,11 @@
+using EvoltingStore.Entity;
 using EvoltingStore.Hubs;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<EvoltingStoreContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("EvoltingStore")));
 // Add services to the container.
 builder.Services.AddRazorPages();
 

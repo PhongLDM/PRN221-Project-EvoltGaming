@@ -148,10 +148,6 @@
                             }
                             else{
                                 <button onclick="myFunction()" style="border-radius: 12px;" class="dropbtn mr-2">Download Now</button>
-                                <div id="myDropdown" class="dropdown-content">
-                                    <a href="@game.PirateLink" style=@(game.PirateLink != null ? "":"pointer-events: none")>Become a Pirate</a>
-                                    <a href="@game.OfficialLink" style=@(game.PirateLink != null ? "":"pointer-events: none")>Support the Game Industry</a>
-                                </div>
                                 <form method="post" asp-page-handler="Favourite">
                                     <input type="text" name="gameId" value="@game.GameId" hidden/>
                                     <input type="submit" class="follow-btn" value="@(isFavourite ? "Remove from Favourite" : "Add to Favourite")"/>
@@ -208,13 +204,7 @@
                         <div class="section-title">
                             <h5>you might like...</h5>
                         </div>
-                        @foreach(var n in news){
-                            <div class="product__sidebar__view__item set-bg" data-setbg="@n.Image">
-                                <div class="ep">@n.Date</div>
-                                <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                <h5><a href="@n.Link">@n.Title</a></h5>
-                            </div>
-                        }
+
 @*                        <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-1.jpg">
                             <div class="ep">18 / ?</div>
                             <div class="view"><i class="fa fa-eye"></i> 9141</div>

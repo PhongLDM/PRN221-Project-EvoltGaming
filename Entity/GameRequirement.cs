@@ -12,8 +12,8 @@ namespace EvoltingStore.Entity
         public double Memory { get; set; }
         public double Storage { get; set; }
         public int? DirectX { get; set; }
-        public string? Graphic { get; set; }
-        public string? Other { get; set; }
+        public string Graphic { get; set; }
+        public string Other { get; set; }
 
         public virtual Game Game { get; set; } = null!;
     }
