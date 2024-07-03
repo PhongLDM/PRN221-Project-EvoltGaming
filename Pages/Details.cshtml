@@ -12,6 +12,7 @@
     var minimum = (GameRequirement)ViewData["minimum"];
     var recommend = (GameRequirement)ViewData["recommend"];
     var news = (List<News>)ViewData["news"];
+    var gameOrderSuccessList = (List<int>)ViewData["gameOrderSuccessList"];
 
     var user = HttpContext.Session.GetString("user");
     var userData = (User)ViewData["userDetail"];
@@ -102,7 +103,7 @@
                     <div class="anime__details__text">
                         <div class="anime__details__title">
                             <h3>@game.Name</h3>
-                            <span><strong>Publisher:</strong> @game.Publisher - <strong>Release Date:</strong> @game.ReleaseDate.ToShortDateString()</span>
+                            <span><strong>Release Date:</strong> @game.ReleaseDate.ToShortDateString()</span>
                         </div>
                         <div class="anime__details__rating">
                             <div class="rating">
@@ -148,15 +149,20 @@
                             }
                             else
                             {
-                                <button onclick="myFunction()" style="border-radius: 12px;" class="dropbtn mr-2">Download Now</button>
                                 <form method="post" asp-page-handler="Favourite">
                                     <input type="text" name="gameId" value="@game.GameId" hidden />
                                     <input type="submit" class="follow-btn" value="@(isFavourite ? "Remove from Favourite" : "Add to Favourite")" />
                                 </form>
-                                <form method="post" asp-page="/Cart" asp-page-handler="Add">
-                                    <input type="hidden" name="gameId" value="@game.GameId" />
-                                    <button type="submit" class="btn btn-primary">Add to Cart</button>
-                                </form>
+                                @if (gameOrderSuccessList != null && gameOrderSuccessList.Contains(game.GameId)){
+                                    <a href="@game.GameSource" class="btn btn-primary">
+                                        <button type="submit" class="btn btn-primary">Download Now</button>
+                                    </a>
+                                }else{
+                                    <form method="post" asp-page="/Cart" asp-page-handler="Add">
+                                        <input type="hidden" name="gameId" value="@game.GameId" />
+                                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                                    </form>
+                                }
                             }
                         </div>
                     </div>

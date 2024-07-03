@@ -163,7 +163,7 @@ namespace EvoltingStore.Pages
             {
                 UserId = userId,
                 OrderDate = DateTime.Now,
-                Status = true,
+                Status = false,
                 TotalPrice = userCart.CartItems.Sum(ci => ci.Game.Price),
                 OrderDetails = userCart.CartItems.Select(ci => new OrderDetail
                 {

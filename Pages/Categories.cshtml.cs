@@ -92,7 +92,7 @@ namespace EvoltingStore.Pages
             if(searchName != null && searchName.Length > 0)
             {
                 games = (from g in games
-                         where g.Name.Contains(searchName)
+                         where g.Name.ToLower().Contains(searchName.ToLower())
                          select g).ToList();
             }
 

@@ -84,15 +84,23 @@
                                     <tr>
                                         <th>Product Name</th>
                                         <th>Price</th>
+                                        <th>Game Source</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var detail in Model.Order.OrderDetails)
                                     {
-                                        <a href="/Details?gameId=@item.Game.GameId">
+                                        <a href="/Details?gameId=@detail.Game.GameId">
                                             <tr>
                                                 <td>@detail.Game.Name</td>
                                                 <td>@detail.Game.Price.ToString("C")</td>
+                                                <td>
+                                                    @if(Model.Order.Status){
+                                                        <a href="@detail.Game.GameSource">Download Now</a>
+                                                    }else{
+                                                        <p>Waiting For Purchase Successfully</p>
+                                                    }
+                                                </td>
                                             </tr>
                                         </a>
                                     }
@@ -155,6 +163,10 @@
 <!-- Search model end -->
 <style>
     .table {
+        color: white;
+    }
+
+    p{
         color: white;
     }
 </style>
