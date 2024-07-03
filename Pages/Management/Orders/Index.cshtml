@@ -11,6 +11,7 @@
 
 @{
     var orders = (List<Order>)ViewData["orders"];
+    var orderId = ViewData["orderId"];
 }
 
 <!-- Page Preloder -->
@@ -82,23 +83,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var g in orders) {
+                    @for (int i = 0; i < orders.Count; i++) {
                         <tr>
-                            <td>@g.OrderId</td>
-                            <td>@g.UserId</td>
-                            <td>@g.TotalPrice</td>
-                            <td>@g.OrderDate.ToShortDateString()</td>
-                            <td>@g.Status</td>
+                            <td>@(i + 1)</td>
+                            <td>@orders[i].UserId</td>
+                            <td>$ @orders[i].TotalPrice</td>
+                            <td>@orders[i].OrderDate.ToShortDateString()</td>
+                            <td>@orders[i].Status</td>
                             <td>
-                                <form action="/Management/Orders" method="GET">
-                                    <input type="text" name="OrderId" value="@g.OrderId" hidden />
-                                    <input type="submit" value="Detail" class="btn btn-primary" />    
+                                <form action="/Management/Orders/Detail" method="GET">
+                                    <input type="text" name="OrderId" value="@orders[i].OrderId" hidden />
+                                    <input type="submit" value="Detail" class="btn btn-primary" />
                                 </form>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
+            @if (orders == null || orders.Count == 0) {
+                <div class="text-center text-black-50">The orders list is empty!</div>
+            }
         </div>
     </div>
 </div>

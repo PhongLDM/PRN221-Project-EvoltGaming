@@ -13,7 +13,6 @@ namespace EvoltingStore.Pages.Management.Orders
             User user = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
             if (user.RoleId == 1) {
                 ViewData["orders"] = context.Orders.ToList();
-
                 return Page();
             }
 
