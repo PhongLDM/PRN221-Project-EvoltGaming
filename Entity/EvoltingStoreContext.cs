@@ -162,10 +162,10 @@ namespace EvoltingStore.Entity
 
                 entity.Property(e => e.Price).HasColumnName("price");
 
-                entity.Property(e => e.Publisher)
+                entity.Property(e => e.GameSource)
                     .HasMaxLength(100)
                     .IsUnicode(false)
-                    .HasColumnName("publisher");
+                    .HasColumnName("gameSource");
 
                 entity.Property(e => e.ReleaseDate)
                     .HasColumnType("date")
