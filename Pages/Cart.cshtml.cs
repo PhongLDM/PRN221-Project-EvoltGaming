@@ -29,11 +29,11 @@ namespace EvoltingStore.Pages
                 return RedirectToPage("/Login");
             }
 
-            User u = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
+            User user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
             CurrentUser = await _context.Users
                 .Include(u => u.UserDetail)
                 .Include(u => u.Cart)
-                .FirstOrDefaultAsync(u => u.UserId == u.UserId);
+                .FirstOrDefaultAsync(u => u.UserId == user.UserId);
 
             if (CurrentUser != null)
             {
@@ -60,11 +60,11 @@ namespace EvoltingStore.Pages
                 return RedirectToPage("/Login");
             }
 
-            User u = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
+            User user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
             CurrentUser = await _context.Users
                 .Include(u => u.UserDetail)
                 .Include(u => u.Cart)
-                .FirstOrDefaultAsync(u => u.UserId == u.UserId);
+                .FirstOrDefaultAsync(u => u.UserId == user.UserId);
 
             if (CurrentUser != null)
             {
@@ -147,12 +147,10 @@ namespace EvoltingStore.Pages
 
             User user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
 
-            int userId = user.UserId;
-
             var userCart = await _context.Carts
                 .Include(c => c.CartItems)
                 .ThenInclude(ci => ci.Game)
-                .FirstOrDefaultAsync(c => c.UserId == userId);
+                .FirstOrDefaultAsync(c => c.UserId == user.UserId);
 
             if (userCart == null || !userCart.CartItems.Any())
             {
@@ -161,7 +159,7 @@ namespace EvoltingStore.Pages
 
             var order = new Order
             {
-                UserId = userId,
+                UserId = user.UserId,
                 OrderDate = DateTime.Now,
                 Status = false,
                 TotalPrice = userCart.CartItems.Sum(ci => ci.Game.Price),
