@@ -78,7 +78,7 @@
                         <th>User Id</th>
                         <th>Total Price</th>
                         <th>Order Date</th>
-                        <th>Status</th>
+                        <th>Payment Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -89,12 +89,23 @@
                             <td>@orders[i].UserId</td>
                             <td>$ @orders[i].TotalPrice</td>
                             <td>@orders[i].OrderDate.ToShortDateString()</td>
-                            <td>@orders[i].Status</td>
                             <td>
+                                @if (orders[i].Status) {
+                                    <p><span class="status text-success">&bull;</span>Confirmed</p>
+                                } else {
+                                    <p><span class="status text-danger">&bull;</span>Unconfirmed</p>
+                                }
+                            </td>
+                            <td style="width: 262.91px" class="d-flex gap-3">
                                 <form action="/Management/Orders/Detail" method="GET">
                                     <input type="text" name="OrderId" value="@orders[i].OrderId" hidden />
                                     <input type="submit" value="Detail" class="btn btn-primary" />
                                 </form>
+                                @if (!orders[i].Status) {
+                                    <button style="width:150px" onclick="handleConfirming(@orders[i].OrderId)" type="button" class="btn btn-success">
+                                        Payment Confirm
+                                    </button>
+                                }
                             </td>
                         </tr>
                     }
@@ -108,6 +119,27 @@
 </div>
 
 
+<!-- Modal -->
+<div class="modal fade" onclick="handleClickingOutside()" id="confirmationBox" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirm payment for this order!</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          Do you want to confirm payment of this order?
+      </div>
+      <div class="modal-footer">
+        <button onclick="handleCloseCfmBox()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <form method="post">
+            <input type="text" name="OrderId" id="confirmationBox_orderIdInput" hidden />
+            <button type="submit" class="btn btn-primary">Yes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <style>
     body {
@@ -115,6 +147,10 @@
         background: #f5f5f5;
         font-family: 'Varela Round', sans-serif;
         font-size: 13px;
+    }
+
+    #confirmationBox.fade {
+        background: rgba(0,0,0,.2);
     }
 
     .table-responsive {
@@ -308,4 +344,22 @@
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
+
+    function handleConfirming(orderId) {
+        document.getElementById("confirmationBox_orderIdInput").value = orderId;
+        document.getElementById("confirmationBox").classList.add("show");
+        document.getElementById("confirmationBox").style.display = "block";
+    }
+    function handleCloseCfmBox() {
+        document.getElementById("confirmationBox").classList.remove("show");
+        document.getElementById("confirmationBox").style.display = "none";
+    }
+    function handleClickingOutside() {
+        document.getElementById("confirmationBox").classList.add("modal-static");
+        document.getElementById("confirmationBox").style.overflowY = "hidden";
+        setTimeout(() => {
+            document.getElementById("confirmationBox").classList.remove("modal-static");
+            document.getElementById("confirmationBox").style.overflowY = "";
+        }, 200);
+    }
 </script>
