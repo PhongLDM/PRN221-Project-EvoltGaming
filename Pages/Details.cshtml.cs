@@ -15,7 +15,9 @@ namespace EvoltingStore.Pages
         {
             Game game = context.Games.Include(g => g.Genres).Include(g => g.Comments).ThenInclude(c => c.User).Include(g => g.Users).FirstOrDefault(g => g.GameId == gameId);
             Boolean isFavourite = false;
-            
+            List<int> gameOrderSuccessList = null;
+
+
             String userJSON = HttpContext.Session.GetString("user");
             if(userJSON != null)
             {
@@ -23,6 +25,11 @@ namespace EvoltingStore.Pages
 
                 User user = context.Users.FirstOrDefault(u => u.UserId == us.UserId);
 
+                gameOrderSuccessList = context.OrderDetails
+               .Where(od => od.Order.Status == true && od.Order.UserId == user.UserId)
+               .Select(od => od.GameId)
+               .Distinct()
+               .ToList();
 
                 if (game.Users.Contains(user))
                 {
@@ -34,13 +41,11 @@ namespace EvoltingStore.Pages
             GameRequirement minimum = context.GameRequirements.FirstOrDefault(gr => gr.GameId == gameId && gr.Type.Equals("minimum"));
             GameRequirement recommend = context.GameRequirements.FirstOrDefault(gr => gr.GameId == gameId && gr.Type.Equals("recommend"));
 
-           
-
             ViewData["isFavourite"] = isFavourite;
             ViewData["game"] = game;
             ViewData["minimum"] = minimum;
             ViewData["recommend"] = recommend;
-
+            ViewData["gameOrderSuccessList"] = gameOrderSuccessList;
 
         }
 

@@ -43,7 +43,11 @@ namespace EvoltingStore.Pages
                     HttpContext.Session.SetString("user", jsonUser);
 
                     UserDetail userDetail = context.UserDetails.FirstOrDefault(u => u.UserId == user.UserId);
-                    String jsonUserDetail = Newtonsoft.Json.JsonConvert.SerializeObject(userDetail);
+
+                    String jsonUserDetail = JsonConvert.SerializeObject(userDetail, Formatting.Indented, new JsonSerializerSettings
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    });
                     HttpContext.Session.SetString("userDetail", jsonUserDetail);
 
                     return Redirect("/Index");

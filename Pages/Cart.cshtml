@@ -31,7 +31,7 @@
                             <li><a href="/Categories">Browse</a></li>
                             <li><a href="/Blog">Our Blog</a></li>
                             <li><a href="#">Contacts</a></li>
-                            <li><a href="#">My Favourite</a></li>
+                            <li><a href="#">My Favourite</a></li><li><a href="/OrderHistory">My Orders</a></li>
                             <li class="active"><a href="/Cart">Cart</a></li>
                         </ul>
                     </nav>
@@ -123,16 +123,16 @@
 
                         </div>
                     </div>
-                    <div class="d-flex justify-content-end">
+                    <div class="d-flex">
                         <div class="col-lg-9">
                             <div class="btn btn-light btn-lg me-2">
                                 <a href="/Categories">Continue Shopping</a>
                             </div>
                         </div>
                         <div class="col-lg-3">
-                            <div class="btn btn-primary btn-lg">
-                                <a href="#" class="primary-btn">PROCEED TO CHECKOUT</a>
-                            </div>
+                            <form method="post" asp-page-handler="Checkout">
+                                <button type="submit" class="btn btn-primary btn-lg">Proceed to CHECKOUT</button>
+                            </form>
                         </div>
                     </div>
                     <br />
@@ -142,47 +142,4 @@
     </div>
 </section>
 
-<!-- Footer Section Begin -->
-<footer class="footer">
-    <div class="page-up">
-        <a href="#" id="scrollToTopButton"><span class="arrow_carrot-up"></span></a>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="footer__logo">
-                    <a href="./index.html"><img src="img/logo.png" alt=""></a>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="footer__nav">
-                    <ul>
-                        <li><a href="/Index">Homepage</a></li>
-                        <li><a href="/Categories">Browse</a></li>
-                        <li><a href="#">Our Blog</a></li>
-                        <li><a href="#">Contacts</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <p>
-                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                </p>
 
-            </div>
-        </div>
-    </div>
-</footer>
-<!-- Footer Section End -->
-<!-- Search model Begin -->
-<div class="search-model">
-    <div class="h-100 d-flex align-items-center justify-content-center">
-        <div class="search-close-switch"><i class="icon_close"></i></div>
-        <form class="search-model-form">
-            <input type="text" id="search-input" placeholder="Search here.....">
-        </form>
-    </div>
-</div>
-<!-- Search model end -->

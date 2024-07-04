@@ -47,7 +47,7 @@
                             <li><a href="#">Contacts</a></li>
                             @if (userData != null)
                             {
-                                <li><a href="#">My Favourite</a></li>
+                                <li><a href="#">My Favourite</a></li><li><a href="/OrderHistory">My Orders</a></li>
                                 <li><a href="/Cart">Cart</a></li>
                             }
                         </ul>
@@ -98,9 +98,9 @@
 
         <!-- Text input-->
         <div class="form-group">
-            <label class="col-md-4 control-label" for="product_name_fr">PUBLISHER</label>
+            <label class="col-md-4 control-label" for="product_name_fr">GAME SOURCE</label>
             <div class="col-md-4">
-                <input name="game.Publisher" placeholder="Publisher" class="form-control input-md" type="text">
+                <input name="game.GameSource" placeholder="GameSource" class="form-control input-md" type="text">
             </div>
         </div>
 

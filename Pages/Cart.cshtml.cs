@@ -135,5 +135,50 @@ namespace EvoltingStore.Pages
                 return CurrentUser.Cart;
             }
         }
+
+        public async Task<IActionResult> OnPostCheckoutAsync()
+        {
+
+            String userJSON = HttpContext.Session.GetString("user");
+            if (String.IsNullOrEmpty(userJSON))
+            {
+                return RedirectToPage("/Login");
+            }
+
+            User user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
+
+            int userId = user.UserId;
+
+            var userCart = await _context.Carts
+                .Include(c => c.CartItems)
+                .ThenInclude(ci => ci.Game)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+
+            if (userCart == null || !userCart.CartItems.Any())
+            {
+                return NotFound();
+            }
+
+            var order = new Order
+            {
+                UserId = userId,
+                OrderDate = DateTime.Now,
+                Status = false,
+                TotalPrice = userCart.CartItems.Sum(ci => ci.Game.Price),
+                OrderDetails = userCart.CartItems.Select(ci => new OrderDetail
+                {
+                    GameId = ci.GameId
+                }).ToList()
+            };
+
+            _context.Orders.Add(order);
+
+            // Clear the cart
+            _context.CartItems.RemoveRange(userCart.CartItems);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("OrderHistory");
+        }
     }
 }

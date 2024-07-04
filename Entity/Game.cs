@@ -18,7 +18,7 @@ namespace EvoltingStore.Entity
         public int GameId { get; set; }
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public string Publisher { get; set; } = null!;
+        public string GameSource { get; set; } = null!;
         public DateTime ReleaseDate { get; set; }
         public DateTime UpdateDate { get; set; }
         public string Platform { get; set; } = null!;

@@ -52,7 +52,7 @@
                             <li><a href="#">Contacts</a></li>
                             @if (userData != null)
                             {
-                                <li><a href="#">My Favourite</a></li>
+                                <li><a href="#">My Favourite</a></li><li><a href="/OrderHistory">My Orders</a></li>
                                 <li><a href="/Cart">Cart</a></li>
                             }
                         </ul>
@@ -144,7 +144,7 @@
                                             }
                                     </div>
                                     <div class="form-group m-2">
-                                        <label for="searchName"><h3 style="color: papayawhip">Search</h3></label>
+                                        <label><h3 style="color: papayawhip">Search</h3></label>
                                         <div>
                                             <input type="text" name="searchName" value="@(searchName != null ? searchName : "")" placeholder="Game Name"/>
                                         </div>
