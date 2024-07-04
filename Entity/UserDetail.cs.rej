@@ -1,0 +1,8 @@
+diff a/Entity/UserDetail.cs b/Entity/UserDetail.cs	(rejected hunks)
+@@ -1,4 +0,5 @@
+-﻿using System;
++﻿using Newtonsoft.Json;
++using System;
+ using System.Collections.Generic;
+ 
+ namespace EvoltingStore.Entity
