@@ -107,14 +107,19 @@
                         <div class="row border-top pt-2">
                             <div class="col-2 col-md-3 font-weight-bold">Payment Status:</div>
                             <div class="col-10 col-md-9">
-                                @if (order.Status) {
-                                    <p><span class="status text-success">&bull;</span>Confirmed</p>
-                                } else {
-                                    <p class="d-inline-block"><span class="status text-danger">&bull;</span>Unconfirmed</p>
-                                    <button style="width:150px" onclick="handleConfirming(@order.OrderId)" type="button" class="btn btn-success">
-                                        Payment Confirm
-                                    </button>
+                                @{
+                                    var isDisable = "disabled";
+                                    var btnCfmText = "Confirmed";
+                                    var btnCfmColor = "success";
                                 }
+                                @if (!order.Status) {
+                                    isDisable = "";
+                                    btnCfmText = "Confirm";
+                                    btnCfmColor = "warning";
+                                }
+                                <button @isDisable style="width:150px" onclick="handleConfirming(@order.OrderId)" type="button" class="btn btn-@btnCfmColor">
+                                    @btnCfmText
+                                </button>
                             </div>
                         </div>
                     </div>

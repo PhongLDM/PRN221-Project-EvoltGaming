@@ -90,22 +90,25 @@
                             <td>$ @orders[i].TotalPrice</td>
                             <td>@orders[i].OrderDate.ToShortDateString()</td>
                             <td>
-                                @if (orders[i].Status) {
-                                    <p><span class="status text-success">&bull;</span>Confirmed</p>
-                                } else {
-                                    <p><span class="status text-danger">&bull;</span>Unconfirmed</p>
+                                @{
+                                    var isDisable = "disabled";
+                                    var btnCfmText = "Confirmed";
+                                    var btnCfmColor = "success";
                                 }
+                                @if (!orders[i].Status) {
+                                    isDisable = "";
+                                    btnCfmText = "Confirm";
+                                    btnCfmColor = "warning";
+                                }
+                                <button @isDisable style="width:150px" onclick="handleConfirming(@orders[i].OrderId)" type="button" class="btn btn-@btnCfmColor">
+                                    @btnCfmText
+                                </button>
                             </td>
                             <td style="width: 262.91px" class="d-flex gap-3">
                                 <form action="/Management/Orders/Detail" method="GET">
                                     <input type="text" name="OrderId" value="@orders[i].OrderId" hidden />
                                     <input type="submit" value="Detail" class="btn btn-primary" />
                                 </form>
-                                @if (!orders[i].Status) {
-                                    <button style="width:150px" onclick="handleConfirming(@orders[i].OrderId)" type="button" class="btn btn-success">
-                                        Payment Confirm
-                                    </button>
-                                }
                             </td>
                         </tr>
                     }
