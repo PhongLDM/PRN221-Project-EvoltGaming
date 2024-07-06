@@ -1,21 +1,12 @@
 ﻿@page
 @model EvoltingStore.Pages.BlogModel
 @using EvoltingStore.Entity
+@using Newtonsoft.Json;
 
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Blog";
-}
-
-@{
-    var news = (List<News>)ViewData["news"];
-
-    var user = HttpContext.Session.GetString("user");
-    var userData = ViewData["userDetail"];
-    if (user != null)
-    {
-        userData = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(user);
-    }
+    var blogs = Model.Blogs;
 }
 
 <!-- Page Preloder -->
@@ -42,9 +33,10 @@
                             <li><a href="/Categories">Browse</a></li>
                             <li class="active"><a href="/Blog">Our Blog</a></li>
                             <li><a href="#">Contacts</a></li>
-                            @if (userData != null)
+                            @if (HttpContext.Session.GetString("user") != null)
                             {
-                                <li><a href="#">My Favourite</a></li><li><a href="/OrderHistory">My Orders</a></li>
+                                <li><a href="#">My Favourite</a></li>
+                                <li><a href="/OrderHistory">My Orders</a></li>
                                 <li><a href="/Cart">Cart</a></li>
                             }
                         </ul>
@@ -54,7 +46,7 @@
             <div class="col-lg-2">
                 <div class="header__right">
                     <a href="#" class="search-switch"><span class="icon_search"></span></a>
-                    @if (user != null)
+                    @if (HttpContext.Session.GetString("user") != null)
                     {
                         <a href="/Profile"><span class="icon_profile"></span></a>
                     }
@@ -69,55 +61,58 @@
     </div>
 </header>
 <!-- Header End -->
-<!-- Product Section Begin -->
-<section class="product-page spad">
+<!-- Blog Section Begin -->
+<section class="blog spad">
+    <div class="text-center mb-4">
+        @if (HttpContext.Session.GetString("user") != null)
+        {
+            // Check if user is admin
+            var user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
+            if (user.RoleId == 1)
+            {
+                <a href="/Management/CreateBlog" class="btn btn-primary">Create Blog</a>
+            }
+        }
+    </div>
     <div class="container">
         <div class="row">
-            <div class="col-lg-10">
-                <div class="product__page__content">
-                    <div class="row">
-                        @foreach (var n in news)
-                        {
-                            <div class="col-lg-6 col-md-12">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="@n.Image">
-                                        <div class="ep">@n.Date</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <h5><a href="@n.Link">@n.Title</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="product__sidebar">
-                    <div class="product__sidebar__view">
-                        <div class="section-title">
-                            <h5>Search for News</h5>
+            @foreach (var blog in blogs)
+            {
+                <div class="col-lg-6 col-md-12">
+                    <div class="blog__item">
+                        <div class="blog__item__pic">
+                            <img src="~/uploads/54693.jpg">
                         </div>
-                        <div class="filter__gallery">
-                            <div class="filter-container">
-                                <form method="post">
-                                    <div class="form-group m-2">
-                                        <label for="searchName"><h3 style="color: papayawhip">Search</h3></label>
-                                        <div>
-                                            <input type="text" name="query" placeholder="Game Name" />
-                                        </div>
-                                    </div>
-                                    <input class="btn btn-primary m-2" type="submit" value="Filter" />
-                                </form>
-                            </div>
+                        <div class="blog__item__text">
+                            <h5><a href="@Url.Page("/BlogDetail", new { id = blog.Id })">@blog.Title</a></h5>
+                            <p>@Html.Raw(blog.Content.Length > 20 ? blog.Content.Substring(0, 20) + "..." : blog.Content)</p>
+                            <p><strong>Genre:</strong> @blog.Genre.GenreName</p> <!-- Displaying the genre -->
+                            <p>@blog.CreateDate?.ToString("MMMM dd, yyyy")</p>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
+        <!-- Paging controls -->
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                    <a class="page-link" href="?pageIndex=@(Model.PageIndex - 1)" tabindex="-1">Previous</a>
+                </li>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                        <a class="page-link" href="?pageIndex=@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" href="?pageIndex=@(Model.PageIndex + 1)">Next</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </section>
-<!-- Product Section End -->
+<!-- Blog Section End -->
 <!-- Footer Section Begin -->
 <footer class="footer">
     <div class="page-up">
@@ -146,7 +141,6 @@
                     Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                 </p>
-
             </div>
         </div>
     </div>

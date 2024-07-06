@@ -46,8 +46,17 @@
     <script src="js/jquery.slicknav.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 
 
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#content'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

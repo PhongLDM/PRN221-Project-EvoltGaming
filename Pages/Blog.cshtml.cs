@@ -1,58 +1,36 @@
-using EvoltingStore.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using EvoltingStore.Entity;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace EvoltingStore.Pages
 {
     public class BlogModel : PageModel
     {
-        public async Task OnGetAsync()
-        {
-            var client = new HttpClient();
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri("https://videogames-news2.p.rapidapi.com/videogames_news/search_news?query=game"),
-                Headers =
-                {
-                    { "X-RapidAPI-Key", "a183a6bf1cmshc0ecd4f7ec60cdep1ecbc5jsn50d81c06026d" },
-                    { "X-RapidAPI-Host", "videogames-news2.p.rapidapi.com" },
-                },
-            };
-            using (var response = await client.SendAsync(request))
-            {
-                response.EnsureSuccessStatusCode();
-                var body = await response.Content.ReadAsStringAsync();
-                
-                List<News> news = JsonConvert.DeserializeObject<List<News>>(body);
+        private readonly EvoltingStoreContext _context;
 
-                ViewData["news"] = news;
-            }
+        public BlogModel(ILogger<BlogModel> logger, EvoltingStoreContext context)
+        {
+            _context = context;
         }
 
-        public async Task OnPostAsync(String query)
+        public List<Blog> Blogs { get; set; }
+        public int PageIndex { get; set; }
+        public int TotalPages { get; set; }
+
+        public async Task OnGetAsync(int pageIndex = 1)
         {
-            var client = new HttpClient();
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri("https://videogames-news2.p.rapidapi.com/videogames_news/search_news?query="+query),
-                Headers =
-                {
-                    { "X-RapidAPI-Key", "a183a6bf1cmshc0ecd4f7ec60cdep1ecbc5jsn50d81c06026d" },
-                    { "X-RapidAPI-Host", "videogames-news2.p.rapidapi.com" },
-                },
-            };
-            using (var response = await client.SendAsync(request))
-            {
-                response.EnsureSuccessStatusCode();
-                var body = await response.Content.ReadAsStringAsync();
-
-                List<News> news = JsonConvert.DeserializeObject<List<News>>(body);
-
-                ViewData["news"] = news;
-            }
+            int pageSize = 6;
+            var query = _context.Blogs.Include(b => b.Genre).OrderByDescending(b => b.Id).AsNoTracking();
+            var count = await query.CountAsync();
+            TotalPages = (int)System.Math.Ceiling(count / (double)pageSize);
+            Blogs = await query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            PageIndex = pageIndex;
         }
     }
 }
