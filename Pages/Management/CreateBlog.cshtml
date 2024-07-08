@@ -1,0 +1,45 @@
+﻿@page
+@model CreateBlogModel
+@using EvoltingStore.Entity
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    Layout = "_Layout";
+}
+
+<h2>Create Blog</h2>
+
+<div class="container">
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" asp-for="Blog.Title">
+            <span asp-validation-for="Blog.Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="content">Content</label>
+            <textarea class="form-control" id="content" rows="5" asp-for="Blog.Content"></textarea>
+            <span asp-validation-for="Blog.Content" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="genreId">Genre</label>
+            <select class="form-control" id="genreId" asp-for="Blog.GenreId" name="Blog.GenreId">
+                @foreach (var genre in Model.Genres)
+                {
+                    <option value="@genre.GenreId">@genre.GenreName</option>
+                }
+            </select>
+            <span asp-validation-for="Blog.GenreId" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
