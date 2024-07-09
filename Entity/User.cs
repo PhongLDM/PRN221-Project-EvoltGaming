@@ -19,6 +19,8 @@ namespace EvoltingStore.Entity
         public int RoleId { get; set; }
         public bool IsActive { get; set; }
         public int? CartId { get; set; }
+        public string? ResetToken { get; set; }
+        public DateTime? ResetTokenExpiry { get; set; }
 
         public virtual Cart? Cart { get; set; }
         public virtual Role Role { get; set; } = null!;
@@ -26,7 +28,6 @@ namespace EvoltingStore.Entity
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
-
         public virtual ICollection<Game> Games { get; set; }
     }
 }
