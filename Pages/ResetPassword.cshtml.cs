@@ -16,6 +16,9 @@ namespace EvoltingStore.Pages
         [BindProperty]
         public string NewPassword { get; set; }
 
+        [BindProperty]
+        public string ConfirmPassword { get; set; }
+
         public string Message { get; set; }
 
         public string MessageType { get; set; }
@@ -30,6 +33,13 @@ namespace EvoltingStore.Pages
             if (string.IsNullOrEmpty(NewPassword))
             {
                 Message = "Password is required.";
+                MessageType = "danger";
+                return Page();
+            }
+
+            if (!NewPassword.Equals(ConfirmPassword))
+            {
+                Message = "Confirm Password does not match.";
                 MessageType = "danger";
                 return Page();
             }
