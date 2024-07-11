@@ -48,7 +48,8 @@
                             <li><a href="#">Contacts</a></li>
                             @if (userData != null)
                             {
-                                <li><a href="#">My Favourite</a></li><li><a href="/OrderHistory">My Orders</a></li> 
+                                <li><a href="/Favourite">My Favourite</a></li>
+                                <li><a href="/OrderHistory">My Orders</a></li>
                                 <li><a href="/Cart">Cart</a></li>
                             }
                         </ul>
@@ -151,13 +152,17 @@
                             {
                                 <form method="post" asp-page-handler="Favourite">
                                     <input type="text" name="gameId" value="@game.GameId" hidden />
-                                    <input type="submit" class="follow-btn" value="@(isFavourite ? "Remove from Favourite" : "Add to Favourite")" />
+                                    <input type="submit" class="btn btn-@(isFavourite ? "secondary" : "danger")" value="@(isFavourite ? "Remove from Favourite" : "Add to Favourite")" />
                                 </form>
-                                @if (gameOrderSuccessList != null && gameOrderSuccessList.Contains(game.GameId)){
+                                <br />
+                                @if (gameOrderSuccessList != null && gameOrderSuccessList.Contains(game.GameId))
+                                {
                                     <a href="@game.GameSource" class="btn btn-primary">
                                         <button type="submit" class="btn btn-primary">Download Now</button>
                                     </a>
-                                }else{
+                                }
+                                else
+                                {
                                     <form method="post" asp-page="/Cart" asp-page-handler="Add">
                                         <input type="hidden" name="gameId" value="@game.GameId" />
                                         <button type="submit" class="btn btn-primary">Add to Cart</button>

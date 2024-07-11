@@ -1,3 +1,4 @@
+using EvoltingStore.EmailService;
 using EvoltingStore.Entity;
 using EvoltingStore.Hubs;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ builder.Services.AddDbContext<EvoltingStoreContext>(options =>
 builder.Services.AddRazorPages();
 
 builder.Services.AddSignalR();
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddDistributedMemoryCache();
 
