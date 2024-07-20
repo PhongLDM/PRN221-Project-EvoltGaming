@@ -7,8 +7,8 @@ namespace EvoltingStore.Entity
     {
         public int Id { get; set; }
         public string? Title { get; set; }
-        public string Content { get; set; } = ""!;
-        public DateTime? CreateDate { get; set; } = DateTime.Now;
+        public string Content { get; set; } = null!;
+        public DateTime? CreateDate { get; set; }
         public int GenreId { get; set; }
 
         public virtual Genre Genre { get; set; } = null!;
