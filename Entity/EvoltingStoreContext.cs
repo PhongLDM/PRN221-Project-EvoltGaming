@@ -33,8 +33,8 @@ namespace EvoltingStore.Entity
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-                optionsBuilder.UseSqlServer(config.GetConnectionString("EvoltingStore"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("server=DZUNG-PC\\DUNG;database=EvoltingStore;Integrated Security=true;TrustServerCertificate=true");
             }
         }
 
@@ -146,6 +146,11 @@ namespace EvoltingStore.Entity
                     .HasColumnType("text")
                     .HasColumnName("description");
 
+                entity.Property(e => e.GameSource)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("gameSource");
+
                 entity.Property(e => e.Image)
                     .HasColumnType("text")
                     .HasColumnName("image");
@@ -161,11 +166,6 @@ namespace EvoltingStore.Entity
                     .HasColumnName("platform");
 
                 entity.Property(e => e.Price).HasColumnName("price");
-
-                entity.Property(e => e.GameSource)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("gameSource");
 
                 entity.Property(e => e.ReleaseDate)
                     .HasColumnType("date")
@@ -183,7 +183,7 @@ namespace EvoltingStore.Entity
                         r => r.HasOne<Game>().WithMany().HasForeignKey("GameId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_GameGenre_Game"),
                         j =>
                         {
-                            j.HasKey("GameId", "GenreId").HasName("PK__GameGenr__E955F33AE77E0B6B");
+                            j.HasKey("GameId", "GenreId").HasName("PK__GameGenr__E955F33A6C8B7D37");
 
                             j.ToTable("GameGenre");
 
@@ -200,7 +200,7 @@ namespace EvoltingStore.Entity
                         r => r.HasOne<Game>().WithMany().HasForeignKey("GameId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Favourite_Game"),
                         j =>
                         {
-                            j.HasKey("GameId", "UserId").HasName("PK__Favourit__3629159D50DBC417");
+                            j.HasKey("GameId", "UserId").HasName("PK__Favourit__3629159DA4852136");
 
                             j.ToTable("Favourite");
 
@@ -213,7 +213,7 @@ namespace EvoltingStore.Entity
             modelBuilder.Entity<GameRequirement>(entity =>
             {
                 entity.HasKey(e => new { e.GameId, e.Type })
-                    .HasName("PK__GameRequ__54AF3176DC333DBC");
+                    .HasName("PK__GameRequ__54AF317693D8ED39");
 
                 entity.ToTable("GameRequirement");
 
@@ -338,6 +338,15 @@ namespace EvoltingStore.Entity
                     .IsUnicode(false)
                     .HasColumnName("password");
 
+                entity.Property(e => e.ResetToken)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("resetToken");
+
+                entity.Property(e => e.ResetTokenExpiry)
+                    .HasColumnType("datetime")
+                    .HasColumnName("resetTokenExpiry");
+
                 entity.Property(e => e.RoleId).HasColumnName("roleId");
 
                 entity.Property(e => e.Username)
@@ -360,7 +369,7 @@ namespace EvoltingStore.Entity
             modelBuilder.Entity<UserDetail>(entity =>
             {
                 entity.HasKey(e => e.UserId)
-                    .HasName("PK__UserDeta__CB9A1CFFC7F7BFD5");
+                    .HasName("PK__UserDeta__CB9A1CFF3729C3FC");
 
                 entity.ToTable("UserDetail");
 
