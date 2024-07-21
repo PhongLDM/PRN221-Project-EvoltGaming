@@ -119,32 +119,37 @@
                     <div class="col-md-12">
                         <label class="labels">Username</label>
                         <input type="text" class="form-control" name="username" value="@userData.Username" readonly>
-                    </div> <br> 
+                    </div><br> 
                     <div class="col-md-12">
                         <label class="labels">New Password</label>
                         <input type="text" class="form-control"name="password" placeholder="New Password" value="">
                     </div>
                     <div class="d-flex justify-content-between align-items-center experience">
                         <input type="submit" class="btn btn-success m-3" value="Change Password"/>
-                    </div><br>. 
-                </form>
-            </div> 
-            @if(userData.RoleId == 1){
-                <div class="p-3 py-5"> 
+                    </div>
+                </form><br />
+
+                @if (userData.RoleId == 1)
+                {
                     <div class="d-flex justify-content-between align-items-center experience">
                         <span>Admin Privileges</span>
-                    </div><br> 
+                    </div>
+                    <br>
                     <div class="col-md-12">
-                            <a href="/Management/Users"><button class="btn btn-warning mb-1">User Management</button></a>
-                    </div> 
+                        <a href="/Management/Users"><button class="btn btn-warning mt-1">User Management</button></a>
+                    </div>
                     <div class="col-md-12">
-                            <a href="/Management/Games"><button class="btn btn-dark mt-1">Game Management</button></a>
+                        <a href="/Management/Games"><button class="btn btn-dark mt-1">Game Management</button></a>
+                    </div>
+                    <div class="col-md-12">
+                        <a href="/GameOrderStatistics"><button class="btn btn-dark mt-1">Game Order Statistics</button></a>
                     </div>
                     <div class="col-md-12">
                         <a href="/Management/Orders"><button class="btn btn-dark mt-1">Order Management</button></a>
                     </div>
-                </div> 
-            }
+                }
+            </div> 
+
         </div> 
     </div>
 </div>
