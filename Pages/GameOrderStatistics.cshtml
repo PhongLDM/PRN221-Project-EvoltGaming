@@ -1,0 +1,204 @@
+﻿@page
+@model EvoltingStore.Pages.GameOrderStatisticsModel
+@using EvoltingStore.Entity
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Game Order Statistics";
+}
+
+@{
+    var user = HttpContext.Session.GetString("user");
+    var userDetail = HttpContext.Session.GetString("userDetail");
+
+    var userData = user != null ? Newtonsoft.Json.JsonConvert.DeserializeObject<User>(user) : null;
+    var userDetailData = userDetail != null ? Newtonsoft.Json.JsonConvert.DeserializeObject<UserDetail>(userDetail) : null;
+}
+
+<!-- Page Preloader -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<!-- Header Section Begin -->
+<header class="header">
+    <!-- Header content -->
+</header>
+<!-- Header End -->
+
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-4 border-right">
+            <div class="d-flex flex-column p-3 py-5">
+
+                <h3>Filters</h3>
+                <label for="monthSelect" class="form-label">Month:</label>
+                <select id="monthSelect" class="form-control">
+                </select>
+                <br>
+                <label for="yearSelect" class="form-label">Year:</label>
+                <select id="yearSelect" class="form-control">
+                </select>
+                <button class="btn btn-primary mt-2 mb-3" onclick="applyFilters()">Apply Filters</button>
+
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="p-3 py-5">
+                <h3>Game Order Statistics</h3>
+
+                <ul class="nav nav-tabs mt-2">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-target="#chartSection">Chart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-target="#tableSection">Table</a>
+                    </li>
+                </ul>
+
+                <div id="chartSection">
+                    <canvas id="gameOrderChart" width="400" height="200"></canvas>
+                </div>
+
+                <div id="tableSection" style="display: none;">
+                    <table id="gameOrderTable" class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Game Name</th>
+                                <th scope="col">Order</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let chart; // Define chart globally
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fetch and populate available filters
+        fetch('@Url.Page("/GameOrderStatistics", "AvailableFilters")')
+            .then(response => response.json())
+            .then(data => {
+                console.log("Data fetched from server:", data);
+
+                const monthSelect = document.getElementById('monthSelect');
+                const yearSelect = document.getElementById('yearSelect');
+
+                // Populate month dropdown
+                data.months.forEach(month => {
+                    const option = `<option value="${month}">${month}</option>`;
+                    monthSelect.innerHTML += option;
+                });
+
+                // Populate year dropdown
+                data.years.forEach(year => {
+                    const option = `<option value="${year}">${year}</option>`;
+                    yearSelect.innerHTML += option;
+                });
+
+                // Hide default select and show nice-select (if applicable)
+                monthSelect.style.display = 'block';
+                yearSelect.style.display = 'block';
+
+                $('.nice-select').hide();
+
+                // Load initial data
+                fetchGameOrderStats();
+            })
+            .catch(error => console.error('Error fetching available filters:', error));
+
+        // Tab click event listeners
+        document.querySelectorAll('.nav-link').forEach(tab => {
+            tab.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Remove 'active' class from all tabs
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+
+                // Hide all sections
+                document.querySelectorAll('#chartSection, #tableSection').forEach(section => section.style.display = 'none');
+
+                // Show the clicked tab's target section
+                const targetId = this.getAttribute('data-target');
+                document.querySelector(targetId).style.display = 'block';
+
+                // Add 'active' class to the clicked tab
+                this.classList.add('active');
+            });
+        });
+    });
+
+    function fetchGameOrderStats(month = null, year = null) {
+        const url = new URL('@Url.Page("/GameOrderStatistics", "GameOrderStats")', window.location.origin);
+        if (month) url.searchParams.append('month', month);
+        if (year) url.searchParams.append('year', year);
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Data fetched from server:", data);
+
+                const labels = data.map(item => item.gameName);
+                const orderCounts = data.map(item => item.orderCount);
+
+                // Populate game order table
+                const gameOrderTableBody = document.getElementById('gameOrderTable').getElementsByTagName('tbody')[0];
+                gameOrderTableBody.innerHTML = '';
+                data.forEach((item, index) => {
+                    const row = gameOrderTableBody.insertRow();
+                    const cellIndex = row.insertCell(0);
+                    const cellName = row.insertCell(1);
+                    const cellCount = row.insertCell(2);
+
+                    cellIndex.textContent = index + 1;
+                    cellName.textContent = item.gameName;
+                    cellCount.textContent = item.orderCount;
+                });
+
+                // Render or update chart
+                const ctx = document.getElementById('gameOrderChart').getContext('2d');
+
+                if (chart) {
+                    chart.data.labels = labels;
+                    chart.data.datasets[0].data = orderCounts;
+                    chart.update();
+                } else {
+                    chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Number of Orders',
+                                data: orderCounts,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            })
+            .catch(error => console.error('Error fetching game order stats:', error));
+    }
+
+    function applyFilters() {
+        const month = document.getElementById('monthSelect').value;
+        const year = document.getElementById('yearSelect').value;
+        fetchGameOrderStats(month, year);
+    }
+</script>
