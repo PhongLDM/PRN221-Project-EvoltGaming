@@ -47,7 +47,7 @@ namespace EvoltingStore.Entity
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Content)
-                    .HasMaxLength(250)
+                    .HasMaxLength(1000)
                     .HasColumnName("content");
 
                 entity.Property(e => e.CreateDate)

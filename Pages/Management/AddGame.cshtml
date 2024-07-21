@@ -27,53 +27,9 @@
 </div>
 
 <!-- Header Section Begin -->
-<header class="header">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-2">
-                <div class="header__logo">
-                    <a href="/Index">
-                        <img src="img/logo.png" alt="">
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-8">
-                <div class="header__nav">
-                    <nav class="header__menu mobile-menu">
-                        <ul>
-                            <li><a href="/Index">Homepage</a></li>
-                            <li><a href="/Categories">Browse</a></li>
-                            <li><a href="#">Our Blog</a></li>
-                            <li><a href="#">Contacts</a></li>
-                            @if (userData != null)
-                            {
-                                <li><a href="#">My Favourite</a></li><li><a href="/OrderHistory">My Orders</a></li>
-                                <li><a href="/Cart">Cart</a></li>
-                            }
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="header__right">
-                    <a href="#" class="search-switch"><span class="icon_search"></span></a>
-                    @if (user != null)
-                    {
-                        <a href="/Profile"><span class="icon_profile"></span></a>
-                    }
-                    else
-                    {
-                        <a href="/Login">Login Now</a>
-                    }
-                </div>
-            </div>
-        </div>
-        <div id="mobile-menu-wrap"></div>
-    </div>
-</header>
 <!-- Header End -->
 
-<form method="post" class="form-horizontal m-5" enctype="multipart/form-data">
+<form method="post" class="form-horizontal m-5" enctype="multipart/form-data" onsubmit="return validateForm()">
     <fieldset>
 
         <!-- Form Name -->
@@ -83,7 +39,7 @@
         <div class="form-group">
             <label class="col-md-4 control-label" for="product_name">NAME</label>
             <div class="col-md-4">
-                <input name="game.Name" placeholder="Name" class="form-control input-md" type="text">
+                <input name="game.Name" placeholder="Name" class="form-control input-md" type="text" required>
 
             </div>
         </div>
@@ -92,7 +48,7 @@
         <div class="form-group">
             <label class="col-md-4 control-label" for="product_name_fr">DESCRIPTION</label>
             <div class="col-md-4">
-                <textarea class="form-control input-md" placeholder="Description" name="game.Description"></textarea>
+                <textarea class="form-control input-md" placeholder="Description" name="game.Description" required></textarea>
             </div>
         </div>
 
@@ -100,7 +56,7 @@
         <div class="form-group">
             <label class="col-md-4 control-label" for="product_name_fr">GAME SOURCE</label>
             <div class="col-md-4">
-                <input name="game.GameSource" placeholder="GameSource" class="form-control input-md" type="text">
+                <input name="game.GameSource" placeholder="GameSource" class="form-control input-md" type="text" required>
             </div>
         </div>
 
@@ -117,7 +73,17 @@
         <div class="form-group">
             <label class="col-md-4 control-label" for="product_name_fr">PLATFORM</label>
             <div class="col-md-4">
-                <input name="game.Platform" placeholder="Platform" class="form-control input-md" type="text">
+                <input name="game.Platform" placeholder="Platform" class="form-control input-md" type="text" required>
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="product_name_fr">PRICE</label>
+            <div class="col-md-4">
+                <input name="game.Price" id="price" placeholder="Price" class="form-control input-md" type="text" required>
+                <span id="priceError" style="color:red; display:none;">Please enter a valid positive number.</span>
+                <br />
             </div>
         </div>
 
@@ -138,9 +104,10 @@
         <div class="form-group">
             <label class="col-md-4 control-label" for="filebutton">Image</label>
             <div class="col-md-4">
-                <input id="filebutton" name="gameImg" class="input-file" type="file">
+                <input class="form-control input-md" type="text" id="imageURL" name="imageURL" placeholder="Enter image URL" required>
             </div>
         </div>
+        <div id="imageDisplay"></div>
 
         <!-- Button -->
         <div class="form-group">
@@ -151,4 +118,37 @@
 
     </fieldset>
 </form>
+<script>
+    document.getElementById('imageURL').addEventListener('input', function() {
+        var imageURL = this.value;
+        var imageDisplayDiv = document.getElementById('imageDisplay');
+        if (imageURL) {
+            var imgElement = document.createElement('img');
+            imgElement.src = imageURL;
+            imgElement.alt = 'Uploaded Image';
+            imageDisplayDiv.innerHTML = '';
+            imageDisplayDiv.appendChild(imgElement);
+        } else {
+            imageDisplayDiv.innerHTML = '';
+        }
+    });
+    function validateForm() {
+        var price = document.getElementById('price').value;
+        var priceError = document.getElementById('priceError');
+
+        if (!price || isNaN(price) || parseFloat(price) < 0) {
+            priceError.style.display = 'inline';
+            return false;
+        } else {
+            priceError.style.display = 'none';
+            return true;
+        }
+    }
+</script>
+<style>
+    #imageDisplay img {
+        max-width: 200px;
+        max-height: 200px;
+    }
+</style>
 

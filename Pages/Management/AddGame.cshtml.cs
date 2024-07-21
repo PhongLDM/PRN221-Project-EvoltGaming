@@ -42,21 +42,14 @@ namespace EvoltingStore.Pages.Management
         }
 
 
-        public async Task<IActionResult> OnPost(IFormFile gameImg, Game game, List<int> genres)
+        public async Task<IActionResult> OnPost(string imageURL, Game game, List<int> genres)
         {
             var context = new EvoltingStoreContext();
             List<Genre> allGenres = context.Genres.ToList();
 
-            if (gameImg != null)
+            if (imageURL != null)
             {
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
-                var filePath = Path.Combine(uploadsFolder, gameImg.FileName);
-                Directory.CreateDirectory(uploadsFolder);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await gameImg.CopyToAsync(fileStream);
-                }
-                game.Image = filePath;
+                game.Image = imageURL;
             }
 
 
