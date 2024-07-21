@@ -6,7 +6,6 @@
     ViewData["Title"] = "Shopping Cart";
 }
 
-
 <!-- Page Preloder -->
 <div id="preloder">
     <div class="loader"></div>
@@ -130,8 +129,8 @@
                             </div>
                         </div>
                         <div class="col-lg-3">
-                            <form method="post" asp-page-handler="Checkout">
-                                <button type="submit" class="btn btn-primary btn-lg">Proceed to CHECKOUT</button>
+                            <form method="post" id="checkout-form" asp-page-handler="Checkout">
+                                <button type="button" class="btn btn-primary btn-lg" id="checkout-button">Proceed to CHECKOUT</button>
                             </form>
                         </div>
                     </div>
@@ -141,5 +140,19 @@
         </div>
     </div>
 </section>
+<script>
+    document.getElementById('checkout-button').addEventListener('click', function() {
+        var checkoutWindow = window.open('/PayPalCheckout', 'PayPalCheckout', 'width=600,height=600');
+
+        window.addEventListener('message', function(event) {
+            if (event.origin === window.location.origin) {
+                if (event.data.success) {
+                    document.getElementById('checkout-form').submit();
+                }
+            }
+        });
+    });
+</script>
+
 
 

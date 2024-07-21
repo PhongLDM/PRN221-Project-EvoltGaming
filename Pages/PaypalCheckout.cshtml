@@ -1,0 +1,53 @@
+﻿@page
+@model EvoltingStore.Pages.PaypalCheckoutModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Paypal Checkout";
+}
+
+    <script src="https://www.paypal.com/sdk/js?client-id=@(Config.PayPalConfig.ClientId)&currency=USD"></script>
+<!-- Page Preloder -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+    <div id="paypal-button-container"></div>
+
+<script>
+    paypal.Buttons({
+        createOrder: function (data, actions) {
+            return fetch("/PaypalCheckout?handler=createOrder", {
+                method: "GET",
+                headers: {
+                    "Content-type": "application/json"
+                }
+            }).then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return res.json();
+            }).then(function (orderData) {
+                console.log(orderData.id);
+                return orderData.id;
+            }).catch(function (error) {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        },
+        onApprove: function (data, actions) {
+            return fetch(`/PaypalCheckout?handler=CaptureOrder&orderID=${data.orderID}`, {
+                method: 'GET'
+            }).then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return res.json();
+            }).then(function (details) {
+                window.opener.postMessage({ success: true }, '*');
+                window.close();
+            }).catch(function (error) {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        }
+    }).render('#paypal-button-container');
+</script>

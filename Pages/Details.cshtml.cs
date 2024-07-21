@@ -16,6 +16,7 @@ namespace EvoltingStore.Pages
             Game game = context.Games.Include(g => g.Genres).Include(g => g.Comments).ThenInclude(c => c.User).Include(g => g.Users).FirstOrDefault(g => g.GameId == gameId);
             Boolean isFavourite = false;
             List<int> gameOrderSuccessList = null;
+            List<int> gameOrderPendingList = null;
 
 
             String userJSON = HttpContext.Session.GetString("user");
@@ -24,6 +25,12 @@ namespace EvoltingStore.Pages
                 User us = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
 
                 User user = context.Users.FirstOrDefault(u => u.UserId == us.UserId);
+
+                gameOrderPendingList = context.OrderDetails.Include(od => od.Order)
+                .Where(od => od.Order.Status == false && od.Order.UserId == user.UserId)
+                .Select(od => od.GameId)
+                .Distinct()
+                .ToList();
 
                 gameOrderSuccessList = context.OrderDetails
                .Where(od => od.Order.Status == true && od.Order.UserId == user.UserId)
@@ -46,6 +53,8 @@ namespace EvoltingStore.Pages
             ViewData["minimum"] = minimum;
             ViewData["recommend"] = recommend;
             ViewData["gameOrderSuccessList"] = gameOrderSuccessList;
+            ViewData["gameOrderPendingList"] = gameOrderPendingList;
+            
 
         }
 

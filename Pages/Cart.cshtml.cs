@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using EvoltingStore.Entity;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.ConstrainedExecution;
+using EvoltingStore.Hubs;
+using PayPalCheckoutSdk.Orders;
+using PayPalHttp;
 
 namespace EvoltingStore.Pages
 {
@@ -157,7 +160,7 @@ namespace EvoltingStore.Pages
                 return NotFound();
             }
 
-            var order = new Order
+            var order = new Entity.Order
             {
                 UserId = user.UserId,
                 OrderDate = DateTime.Now,
@@ -178,5 +181,19 @@ namespace EvoltingStore.Pages
 
             return RedirectToPage("OrderHistory");
         }
+
+        public async Task<IActionResult> OnGetCompleteCheckout()
+        {
+            try
+            {
+                return new JsonResult(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
