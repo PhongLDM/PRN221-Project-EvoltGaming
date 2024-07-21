@@ -78,11 +78,9 @@ namespace EvoltingStore.Pages
 
         public async Task<IActionResult> OnGetGameOrderStatsAsync(int? month = null, int? year = null)
         {
-            // Default to current month and year if not provided
             month ??= Today.Month;
             year ??= Today.Year;
 
-            // Ensure valid month and year values
             if (month < 1 || month > 12 || year < 1900 || year > Today.Year)
             {
                 return BadRequest("Invalid month or year.");
@@ -92,7 +90,8 @@ namespace EvoltingStore.Pages
                 .Include(g => g.OrderDetails)
                 .Where(g => g.OrderDetails.Any(od =>
                     od.Order.OrderDate.Month == month &&
-                    od.Order.OrderDate.Year == year))
+                    od.Order.OrderDate.Year == year &&
+                    od.Order.Status == true))
                 .Select(g => new
                 {
                     GameName = g.Name,

@@ -21,7 +21,43 @@
 
 <!-- Header Section Begin -->
 <header class="header">
-    <!-- Header content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="header__logo">
+                    <a href="/Index">
+                        <img src="img/logo.png" alt="">
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="header__nav">
+                    <nav class="header__menu mobile-menu">
+                        <ul>
+                            <li><a href="/Index">Homepage</a></li>
+                            <li><a href="/Categories">Browse</a></li>
+                            <li><a href="/Blog">Our Blog</a></li>
+                            <li><a href="#">Contacts</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="header__right">
+                    <a href="#" class="search-switch"><span class="icon_search"></span></a>
+                    @if (user != null)
+                    {
+                        <a href="/Profile"><span class="icon_profile"></span></a>
+                    }
+                    else
+                    {
+                        <a href="/Login">Login Now</a>
+                    }
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+    </div>
 </header>
 <!-- Header End -->
 
@@ -71,6 +107,7 @@
                         <tbody>
                         </tbody>
                     </table>
+                    <button class="btn btn-success mt-2 mb-3" onclick="exportTableToExcel('gameOrderTable', 'GameOrderStatistics')">Export to Excel</button>
                 </div>
 
             </div>
@@ -79,11 +116,11 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 <script>
-    let chart; // Define chart globally
+    let chart;
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Fetch and populate available filters
         fetch('@Url.Page("/GameOrderStatistics", "AvailableFilters")')
             .then(response => response.json())
             .then(data => {
@@ -92,45 +129,36 @@
                 const monthSelect = document.getElementById('monthSelect');
                 const yearSelect = document.getElementById('yearSelect');
 
-                // Populate month dropdown
                 data.months.forEach(month => {
                     const option = `<option value="${month}">${month}</option>`;
                     monthSelect.innerHTML += option;
                 });
 
-                // Populate year dropdown
                 data.years.forEach(year => {
                     const option = `<option value="${year}">${year}</option>`;
                     yearSelect.innerHTML += option;
                 });
 
-                // Hide default select and show nice-select (if applicable)
                 monthSelect.style.display = 'block';
                 yearSelect.style.display = 'block';
 
                 $('.nice-select').hide();
 
-                // Load initial data
                 fetchGameOrderStats();
             })
             .catch(error => console.error('Error fetching available filters:', error));
 
-        // Tab click event listeners
         document.querySelectorAll('.nav-link').forEach(tab => {
             tab.addEventListener('click', function (e) {
                 e.preventDefault();
 
-                // Remove 'active' class from all tabs
                 document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
 
-                // Hide all sections
                 document.querySelectorAll('#chartSection, #tableSection').forEach(section => section.style.display = 'none');
 
-                // Show the clicked tab's target section
                 const targetId = this.getAttribute('data-target');
                 document.querySelector(targetId).style.display = 'block';
 
-                // Add 'active' class to the clicked tab
                 this.classList.add('active');
             });
         });
@@ -149,7 +177,6 @@
                 const labels = data.map(item => item.gameName);
                 const orderCounts = data.map(item => item.orderCount);
 
-                // Populate game order table
                 const gameOrderTableBody = document.getElementById('gameOrderTable').getElementsByTagName('tbody')[0];
                 gameOrderTableBody.innerHTML = '';
                 data.forEach((item, index) => {
@@ -163,7 +190,6 @@
                     cellCount.textContent = item.orderCount;
                 });
 
-                // Render or update chart
                 const ctx = document.getElementById('gameOrderChart').getContext('2d');
 
                 if (chart) {
@@ -200,5 +226,14 @@
         const month = document.getElementById('monthSelect').value;
         const year = document.getElementById('yearSelect').value;
         fetchGameOrderStats(month, year);
+    }
+
+    function exportTableToExcel(tableID, filename = '') {
+        const month = document.getElementById('monthSelect').value;
+        const year = document.getElementById('yearSelect').value;
+
+        let table = document.getElementById(tableID);
+        let wb = XLSX.utils.table_to_book(table, { sheet: "Sheet JS" });
+        XLSX.writeFile(wb, filename + "(" + month + "-" + year + ")" + ".xlsx");
     }
 </script>
