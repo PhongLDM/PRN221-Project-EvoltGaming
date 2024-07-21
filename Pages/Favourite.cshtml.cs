@@ -71,7 +71,8 @@ namespace EvoltingStore.Pages
                     ViewData["games"] = games;
                     ViewData["genres"] = genres;
                     ViewData["selected"] = selected;
-                } else
+                }
+                else
                 {
                     return RedirectToPage("/Index");
                 }
@@ -130,6 +131,14 @@ namespace EvoltingStore.Pages
 
         public void OnPostFilter(List<int> genre, string searchName, string orderBy)
         {
+            String userJSON = HttpContext.Session.GetString("user");
+
+            User user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
+            CurrentUser = context.Users
+                .Include(u => u.UserDetail)
+                .Include(u => u.Cart)
+                .FirstOrDefault(u => u.UserId == user.UserId);
+
             List<Game> games = new List<Game>();
             List<Boolean> selected = new List<Boolean>();
             List<Genre> genres = context.Genres.ToList();
@@ -143,7 +152,12 @@ namespace EvoltingStore.Pages
                     selectedGenre.Add(genres[genreId - 1]);
                 }
 
-                foreach (var game in context.Games.Include(g => g.Genres).Include(g => g.Comments).Include(g => g.Users).ToList())
+                foreach (var game in context.Games
+                                        .Include(g => g.Genres)
+                                        .Include(g => g.Comments)
+                                        .Include(g => g.Users)
+                                        .Where(g => g.Users.Any(u => u.UserId == CurrentUser.UserId))
+                                        .ToList())
                 {
                     HashSet<Genre> common = new HashSet<Genre>(game.Genres);
                     common.IntersectWith(selectedGenre);
@@ -161,7 +175,12 @@ namespace EvoltingStore.Pages
             }
             else
             {
-                games = context.Games.Include(g => g.Genres).Include(g => g.Comments).Include(g => g.Users).ToList();
+                games = context.Games
+                    .Include(g => g.Genres)
+                    .Include(g => g.Comments)
+                    .Include(g => g.Users)
+                    .Where(g => g.Users.Any(u => u.UserId == CurrentUser.UserId))
+                    .ToList(); ;
 
                 for (int i = 1; i <= genres.Count; i++)
                 {
